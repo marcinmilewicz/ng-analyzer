@@ -54,31 +54,14 @@ src/
 
 
 3. **Test Coverage**
-    - Unit tests for core functionality
+    - Unit tests for core functionality (asap)
     - Integration tests for file processing
     - Test fixtures for different Angular patterns
     - Performance benchmarking tests
 
 ## Usage Example
 
-```rust
-let mut results = NgAnalysisResults::default();
-let workspace = NxWorkspace::new(path);
-let processor = ProjectProcessor::new(
-    project_path,
-    project_name,
-    ts_config,
-    cache,
-    file_reader,
-    source_map,
-    import_graph
-);
-
-let mut results = NgAnalysisResults::default();
-processor.process_files(&mut results);
-```
-
-## Installation
+### Installation
 
 ```bash
 # Clone the repository
@@ -91,7 +74,7 @@ cargo build --release
 ./target/release/ng-analyzer -d /path/to/nx/workspace -v
 ```
 
-## Example Output
+### Example Output
 ```bash
 🔍 Loading NX Workspace configuration...
 📦 Project api-layer has been processed
