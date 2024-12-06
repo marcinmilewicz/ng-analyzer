@@ -43,7 +43,7 @@ impl ProjectProcessor {
     }
 
     pub fn filter_node_modules(self) -> Self {
-        self.filter(|entry| !crate::analysis::utils::path_utils::is_node_modules(entry))
+        self.filter(|entry| !crate::analysis::utils::path_utils::is_node_modules(entry.path()))
     }
 
     pub fn filter_ts_files(self) -> Self {
@@ -66,10 +66,10 @@ impl ProjectProcessor {
     pub fn collect_paths(&self) -> Vec<PathBuf> {
         WalkDir::new(&self.context.project_path)
             .into_iter()
-            .filter_entry(|e| !crate::analysis::utils::path_utils::is_node_modules(e))
-            .filter_map(|e| e.ok())
-            .filter(|e| {
-                e.file_type().is_file() && e.path().extension().map_or(false, |ext| ext == "ts")
+            .filter_entry(|entry| !crate::analysis::utils::path_utils::is_node_modules(entry.path()))
+            .filter_map(|entry| entry.ok())
+            .filter(|entry| {
+                entry.file_type().is_file() && entry.path().extension().map_or(false, |ext| ext == "ts")
             })
             .map(|e| e.path().to_path_buf())
             .collect()
