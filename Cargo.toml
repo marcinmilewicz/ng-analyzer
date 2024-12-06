@@ -1,0 +1,21 @@
+[package]
+name = "ng-analyzer"
+version = "0.1.0"
+edition = "2021"
+
+[profile.dev]
+debug = true
+opt-level = 0
+
+[dependencies]
+swc_common = "5.0.0"
+swc_ecma_ast = "5.0.0"
+swc_ecma_parser = "6.0.0"
+swc_ecma_visit = "5.0.0"
+walkdir = "2.4.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+swc = "8.0.0"
+rayon = "1.10.0"
+dashmap = "5.5.3"
+clap = { version = "4.5.23", features = ["derive",] }
