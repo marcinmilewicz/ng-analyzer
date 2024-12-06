@@ -91,6 +91,102 @@ cargo build --release
 ./target/release/ng-analyzer -d /path/to/nx/workspace -v
 ```
 
+## Example Output
+```bash
+🔍 Loading NX Workspace configuration...
+📦 Project api-layer has been processed
+📦 Project course-catalog-feature has been processed
+📦 Project employee-list-feature has been processed
+📦 Project course-details-feature has been processed
+📦 Project course-details-data-access has been processed
+📦 Project shared-ui has been processed
+📦 Project ddd-hrm has been processed
+📦 Project course-model-shared has been processed
+📦 Project course-catalog-data-access has been processed
+📦 Project course-shared has been processed
+📦 Project employee-list-data-access has been processed
+📦 Project employee-profile-data-access has been processed
+📦 Project logger has been processed
+📦 Project employee-profile-feature has been processed
+📦 Project employee-model-shared has been processed
+🔍 Analyzing Angular project...
+
+
+📊 Analysis Results:
+  - CourseCatalogFeatureComponent (src/lib/course-catalog-feature/course-catalog-feature.component.ts)
+    Selector: ddd-hrm-course-catalog-feature
+    Package: course-catalog-feature
+    Template: ./course-catalog-feature.component.html
+  - EmploymentListFeatureComponent (src/lib/employment-list-feature/employment-list-feature.component.ts)
+    Selector: ddd-hrm-employment-list-feature
+    Package: employee-list-feature
+    Template: ./employment-list-feature.component.html
+  - CourseDetailsFeatureComponent (src/lib/course-details-feature/course-details-feature.component.ts)
+    Selector: ddd-hrm-course-details-feature
+    Package: course-details-feature
+    Template: ./course-details-feature.component.html
+  - CardComponent (src/lib/card/card.component.ts)
+    Selector: ddd-hrm-card
+    Package: shared-ui
+    Template: ./card.component.html
+    Imports:
+      - ImportedItem { name: "BadgeComponent", alias: None, import_kind: Named } from ../badge/badge.component [resolved: ../ddd-hrm/libs/shared/ui/src/lib/badge/badge.component.ts]
+  - CardFieldComponent (src/lib/card-field/card-field.component.ts)
+    Selector: ddd-hrm-card-field
+    Package: shared-ui
+    Template: ./card-field.component.html
+  - BadgeComponent (src/lib/badge/badge.component.ts)
+    Selector: ddd-hrm-badge
+    Package: shared-ui
+    Template: ./badge.component.html
+  - AppComponent (src/app/app.component.ts)
+    Selector: ddd-hrm-root
+    Package: ddd-hrm
+    Template: ./app.component.html
+  - SelectEmployeeForLearningComponent (src/lib/select-employee-for-learning/select-employee-for-learning.component.ts)
+    Selector: ddd-hrm-select-employee-for-learning
+    Package: course-shared
+    Template: ./select-employee-for-learning.component.html
+  - EmployeeProfileFeatureComponent (src/lib/employee-profile-feature/employee-profile-feature.component.ts)
+    Selector: ddd-hrm-employee-profile-feature
+    Package: employee-profile-feature
+    Template: ./employee-profile-feature.component.html
+  - CourseDetailsApiService (src/lib/course-details-api.service.ts)
+    Package: course-details-data-access
+    Imports:
+      - ImportedItem { name: "CourseDetails", alias: None, import_kind: Named } from ./course-details.model [resolved: ../ddd-hrm/libs/learning-management/course-details-data-access/src/lib/course-details.model.ts]
+      - ImportedItem { name: "EmployeeAssignmentForCourse", alias: None, import_kind: Named } from ./course-details.model [resolved: ../ddd-hrm/libs/learning-management/course-details-data-access/src/lib/course-details.model.ts]
+  - CourseCatalogApiService (src/lib/course-catalog-api.service.ts)
+    Package: course-catalog-data-access
+    Imports:
+      - ImportedItem { name: "CourseListItem", alias: None, import_kind: Named } from ./course-catalog.model [resolved: ../ddd-hrm/libs/learning-management/course-catalog-data-access/src/lib/course-catalog.model.ts]
+  - EmployeeListApiService (src/lib/employee-list-api.service.ts)
+    Package: employee-list-data-access
+  - EmployeeProfileApiService (src/lib/services/employee-profile-api.service.ts)
+    Package: employee-profile-data-access
+    Imports:
+      - ImportedItem { name: "CourseAssignmentForEmployee", alias: None, import_kind: Named } from ../models/employee-profile.model [resolved: ../ddd-hrm/libs/employee-management/employee-profile-data-access/src/lib/models/employee-profile.model.ts]
+      - ImportedItem { name: "EmployeeDetails", alias: None, import_kind: Named } from ../models/employee-profile.model [resolved: ../ddd-hrm/libs/employee-management/employee-profile-data-access/src/lib/models/employee-profile.model.ts]
+  - LoggerService (src/lib/logger.service.ts)
+    Package: logger
+Components found: 9
+
+Services found: 5
+
+Modules found: 0
+
+Directives found: 0
+
+Pipes found: 0
+
+⏱️ Timing Analysis:
+Workspace load time: 56.165666ms
+Total analysis time: 0ns
+Total execution time: 68.205709ms
+15 projects have been processed
+
+```
+
 ## Contributing
 
 Please wait yet for more stable version. Project is in early development stage and the directions are not established.
