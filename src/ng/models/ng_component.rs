@@ -1,5 +1,6 @@
 use crate::analysis::models::import::ResolvedImport;
 use crate::ng::models::ng_base::NgBaseInfo;
+use crate::ng::models::ng_template::TemplateUsage;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -11,6 +12,7 @@ pub struct NgComponentInfo {
     pub template_path: String,
     pub style_paths: Vec<String>,
     pub standalone: bool,
+    pub template_usages: TemplateUsage,
 }
 
 impl NgComponentInfo {
@@ -33,6 +35,7 @@ impl NgComponentInfo {
             template_path,
             style_paths,
             standalone,
+            template_usages: TemplateUsage::default(),
         }
     }
 }

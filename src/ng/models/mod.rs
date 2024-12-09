@@ -1,11 +1,11 @@
+mod ng_base;
 mod ng_component;
+pub mod ng_directive;
 mod ng_module;
-
+pub mod ng_pipe;
 mod ng_results;
 pub mod ng_service;
-mod ng_base;
-pub mod ng_pipe;
-pub mod ng_directive;
+pub mod ng_template;
 
 pub use ng_component::NgComponentInfo;
 pub use ng_module::NgModuleInfo;

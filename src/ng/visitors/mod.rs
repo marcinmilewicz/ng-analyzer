@@ -50,6 +50,7 @@ pub fn analyze_file(
                 project_name,
                 tsconfig.clone(),
                 import_resolver,
+                file_reader,
             );
             module.visit_with(&mut visitor);
 

@@ -1,6 +1,7 @@
 use crate::analysis::models::import::{ImportKind, ImportedItem, ResolvedImport};
 use crate::analysis::models::ts_config::TSConfig;
 use crate::analysis::resolvers::import_resolver::ImportResolver;
+use crate::file_cache_reader::CachedFileReader;
 use crate::ng::analyzers::component_analyzer::NgComponentAnalyzer;
 use crate::ng::analyzers::decorator_analyzer::DecoratorAnalysisCache;
 use crate::ng::analyzers::directive_analyzer::NgDirectiveAnalyzer;
@@ -14,12 +15,13 @@ use swc_ecma_visit::Visit;
 
 pub struct AngularVisitor<'a> {
     file_path: std::path::PathBuf,
-    project_root: std::path::PathBuf,
-    pub results: NgAnalysisResults,
+    file_reader: &'a CachedFileReader,
+    import_resolver: &'a mut ImportResolver,
     imports: Vec<ResolvedImport>,
     package_name: String,
+    project_root: std::path::PathBuf,
+    pub results: NgAnalysisResults,
     ts_config: TSConfig,
-    import_resolver: &'a mut ImportResolver,
 }
 
 impl<'a> AngularVisitor<'a> {
@@ -29,6 +31,7 @@ impl<'a> AngularVisitor<'a> {
         package_name: String,
         tsconfig: TSConfig,
         import_resolver: &'a mut ImportResolver,
+        file_reader: &'a CachedFileReader,
     ) -> Self {
         Self {
             file_path: file_path.to_path_buf(),
@@ -38,6 +41,7 @@ impl<'a> AngularVisitor<'a> {
             package_name,
             ts_config: tsconfig,
             import_resolver,
+            file_reader,
         }
     }
 
@@ -58,6 +62,7 @@ impl<'a> AngularVisitor<'a> {
                         class_name,
                         &self.package_name,
                         self.imports.clone(),
+                        self.file_reader,
                     ) {
                         self.results.components.push(component);
                     }
