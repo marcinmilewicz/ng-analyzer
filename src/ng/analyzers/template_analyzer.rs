@@ -43,7 +43,6 @@ impl TemplateParser {
                 .map(|m| format!("ng{}", m.as_str()))
         );
 
-        // Attribute directives
         let attribute_directive_regex = Regex::new(r"\[(ng[A-Z][a-zA-Z]*)\]").unwrap();
         directives.extend(
             attribute_directive_regex

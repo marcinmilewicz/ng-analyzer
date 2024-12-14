@@ -54,6 +54,8 @@ pub fn analyze_file(
             );
             module.visit_with(&mut visitor);
 
+            visitor.results.build_maps();
+
             Ok(visitor.results)
         }
         Err(_) => Ok(NgAnalysisResults::default()),

@@ -1,9 +1,11 @@
 use super::{NgComponentInfo, NgModuleInfo, NgServiceInfo};
 use crate::analysis::resolvers::import_resolver::ImportResolver;
 use crate::ng;
+use std::collections::HashMap;
 
 use crate::analysis::processor::collector::AnalysisCollector;
 use crate::analysis::processor::context::AnalysisContext;
+use crate::ng::models::component_usage::NgReferences;
 use crate::ng::models::ng_directive::NgDirectiveInfo;
 use crate::ng::models::ng_pipe::NgPipeInfo;
 use serde::{Deserialize, Serialize};
@@ -16,6 +18,79 @@ pub struct NgAnalysisResults {
     pub modules: Vec<NgModuleInfo>,
     pub pipes: Vec<NgPipeInfo>,
     pub services: Vec<NgServiceInfo>,
+
+    pub component_selector_map: HashMap<String, NgComponentInfo>,
+    pub directive_selector_map: HashMap<String, NgDirectiveInfo>,
+    pub pipe_selector_map: HashMap<String, NgPipeInfo>,
+}
+
+impl NgAnalysisResults {
+    pub fn build_maps(&mut self) {
+        self.component_selector_map = self
+            .components
+            .iter()
+            .map(|comp| (comp.selector.clone(), comp.clone()))
+            .collect();
+
+        self.directive_selector_map = self
+            .directives
+            .iter()
+            .map(|dir| (dir.selector.clone(), dir.clone()))
+            .collect();
+
+        self.pipe_selector_map = self
+            .pipes
+            .iter()
+            .map(|pipe| (pipe.name.clone(), pipe.clone()))
+            .collect();
+    }
+
+    pub fn analyze_dependencies(&mut self) {
+        let mut usage_stats: HashMap<String, NgReferences> = HashMap::new();
+
+        for component in &self.components {
+            for used_selector in &component.template_usages.components {
+                if let Some(used_component) = self.component_selector_map.get(used_selector) {
+                    usage_stats
+                        .entry(used_component.base.name.clone())
+                        .or_insert_with(NgReferences::default)
+                        .used_in_templates
+                        .push(component.base.relative_path.clone());
+                }
+            }
+
+            for used_selector in &component.template_usages.directives {
+                if let Some(used_directive) = self.directive_selector_map.get(used_selector) {
+                    usage_stats
+                        .entry(used_directive.base.name.clone())
+                        .or_insert_with(NgReferences::default)
+                        .used_in_templates
+                        .push(component.base.relative_path.clone());
+                }
+            }
+
+            for used_name in &component.template_usages.pipes {
+                if let Some(used_pipe) = self.pipe_selector_map.get(used_name) {
+                    usage_stats
+                        .entry(used_pipe.base.name.clone())
+                        .or_insert_with(NgReferences::default)
+                        .used_in_templates
+                        .push(component.base.relative_path.clone());
+                }
+            }
+        }
+
+        for component in &mut self.components {
+            if let Some(usage) = usage_stats.get(&component.base.name) {
+                component.references = NgReferences {
+                    used_in_templates: usage.used_in_templates.clone(),
+                    used_in_class: vec![],
+                };
+            } else {
+                component.references = NgReferences::default();
+            }
+        }
+    }
 }
 
 impl AnalysisCollector for NgAnalysisResults {
@@ -25,6 +100,9 @@ impl AnalysisCollector for NgAnalysisResults {
         self.modules.extend(other.modules);
         self.directives.extend(other.directives);
         self.pipes.extend(other.pipes);
+
+        self.component_selector_map
+            .extend(other.component_selector_map);
     }
 
     fn process_file(

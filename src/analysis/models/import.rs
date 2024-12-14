@@ -3,8 +3,8 @@ use std::fmt;
 use std::path::PathBuf;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResolvedImport {
-    pub source: String,         // Original import source
-    pub resolved_path: PathBuf, // Absolute resolved path
+    pub source: String,
+    pub resolved_path: PathBuf,
     pub import_type: ImportType,
     pub imported_item: ImportedItem,
 }
@@ -18,7 +18,7 @@ pub enum ImportKind {
 
 impl fmt::Display for ResolvedImport {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?} from {}", self.imported_item, self.source)?;
+        write!(f, "{:?} from {}", self.imported_item.name, self.source)?;
 
         if self.resolved_path != PathBuf::from("unknown") {
             write!(f, " [resolved: {}]", self.resolved_path.display())?;

@@ -1,4 +1,5 @@
 use crate::analysis::models::import::ResolvedImport;
+use crate::ng::models::component_usage::NgReferences;
 use crate::ng::models::ng_base::NgBaseInfo;
 use crate::ng::models::ng_template::TemplateUsage;
 use serde::{Deserialize, Serialize};
@@ -13,6 +14,8 @@ pub struct NgComponentInfo {
     pub style_paths: Vec<String>,
     pub standalone: bool,
     pub template_usages: TemplateUsage,
+    #[serde(default)]
+    pub references: NgReferences,
 }
 
 impl NgComponentInfo {
@@ -36,6 +39,7 @@ impl NgComponentInfo {
             style_paths,
             standalone,
             template_usages: TemplateUsage::default(),
+            references: NgReferences::default(),
         }
     }
 }

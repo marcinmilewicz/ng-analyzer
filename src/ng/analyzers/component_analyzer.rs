@@ -38,7 +38,6 @@ impl NgComponentAnalyzer {
             package_name.clone(),
         );
 
-        // Analyze template if exists
         if !template_path.is_empty() {
             let template_file_path = file_path.parent().unwrap().join(&template_path);
             if let Ok(template_content) = file_reader.read_file(&template_file_path) {

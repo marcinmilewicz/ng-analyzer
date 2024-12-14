@@ -26,10 +26,6 @@ struct Args {
     #[arg(short = 'd', long, default_value = ".")]
     project_path: PathBuf,
 
-    /// Cache duration in seconds
-    #[arg(short, long, default_value = "300")]
-    cache_duration: u64,
-
     /// Output file for analysis results
     #[arg(short, long, default_value = "angular-analysis.json")]
     output_file: PathBuf,
@@ -49,6 +45,10 @@ struct Args {
     /// Filter TypeScript files only
     #[arg(short = 't', long, default_value = "true")]
     typescript_only: bool,
+
+    /// Print specific components (comma-separated)
+    #[arg(short = 'c', long)]
+    print_components: Option<String>,
 }
 
 fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
@@ -58,7 +58,7 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
     if args.verbose {
         println!("🔍 Starting analysis with following parameters:");
         println!("Project path: {:?}", args.project_path);
-        println!("Cache duration: {} seconds", args.cache_duration);
+
         println!("Output file: {:?}", args.output_file);
     }
 
@@ -73,7 +73,7 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
     nx_workspace.load_configuration()?;
     metrics.workspace_load_time = workspace_start.elapsed();
 
-    let file_reader = CachedFileReader::new(Duration::from_secs(args.cache_duration));
+    let file_reader = CachedFileReader::new(Duration::from_secs(4000));
     let shared_cache = ImportCache::new();
     let shared_file_reader = Arc::new(file_reader);
     let import_graph = Arc::new(ImportGraph::new());
@@ -118,13 +118,20 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
         println!("📦 Project {} has been processed", project.name);
     }
 
+    results.analyze_dependencies();
+
     metrics.total_time = total_start.elapsed();
 
-    if args.verbose {
-        NgReporter::print_analysis(&results);
-        metrics.print_summary();
-        println!("{} projects have been processed", projects.len());
+    if let Some(component_filter) = &args.print_components {
+        let component_names: Vec<String> = component_filter
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .collect();
+        NgReporter::print_filtered_components(&results, &component_names);
     }
+
+    metrics.print_summary();
+    println!("{} projects have been processed", projects.len());
 
     let json = serde_json::to_string_pretty(&results)?;
     std::fs::write(&args.output_file, json)?;
