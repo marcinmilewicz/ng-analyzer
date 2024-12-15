@@ -5,14 +5,18 @@ use std::collections::HashMap;
 
 use crate::analysis::processor::collector::AnalysisCollector;
 use crate::analysis::processor::context::AnalysisContext;
+use crate::analysis::utils::path_utils::get_relative_path;
 use crate::ng::models::component_usage::NgReferences;
 use crate::ng::models::ng_directive::NgDirectiveInfo;
+use crate::ng::models::ng_element::NgElement;
 use crate::ng::models::ng_pipe::NgPipeInfo;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct NgAnalysisResults {
+    base_path: PathBuf,
+
     pub components: Vec<NgComponentInfo>,
     pub directives: Vec<NgDirectiveInfo>,
     pub modules: Vec<NgModuleInfo>,
@@ -22,9 +26,26 @@ pub struct NgAnalysisResults {
     pub component_selector_map: HashMap<String, NgComponentInfo>,
     pub directive_selector_map: HashMap<String, NgDirectiveInfo>,
     pub pipe_selector_map: HashMap<String, NgPipeInfo>,
+    #[serde(skip)]
+    pub path_map: HashMap<String, NgElement>,
 }
 
 impl NgAnalysisResults {
+    pub fn new(base_path: PathBuf) -> Self {
+        Self {
+            base_path,
+            components: Vec::new(),
+            directives: Vec::new(),
+            modules: Vec::new(),
+            pipes: Vec::new(),
+            services: Vec::new(),
+            component_selector_map: HashMap::new(),
+            directive_selector_map: HashMap::new(),
+            pipe_selector_map: HashMap::new(),
+            path_map: HashMap::new(),
+        }
+    }
+
     pub fn build_maps(&mut self) {
         self.component_selector_map = self
             .components
@@ -43,6 +64,43 @@ impl NgAnalysisResults {
             .iter()
             .map(|pipe| (pipe.name.clone(), pipe.clone()))
             .collect();
+
+        self.path_map = HashMap::new();
+
+        for component in self.components.iter() {
+            self.path_map.insert(
+                component.base.relative_path.clone(),
+                NgElement::Component(component.clone()),
+            );
+        }
+
+        for directive in self.directives.iter() {
+            self.path_map.insert(
+                directive.base.relative_path.clone(),
+                NgElement::Directive(directive.clone()),
+            );
+        }
+
+        for pipe in self.pipes.iter() {
+            self.path_map.insert(
+                pipe.base.relative_path.clone(),
+                NgElement::Pipe(pipe.clone()),
+            );
+        }
+
+        for module in self.modules.iter() {
+            self.path_map.insert(
+                get_relative_path(&module.base.source_path.clone(), &self.base_path.as_path()),
+                NgElement::Module(module.clone()),
+            );
+        }
+
+        for service in self.services.iter() {
+            self.path_map.insert(
+                get_relative_path(&service.base.source_path.clone(), &self.base_path.as_path()),
+                NgElement::Service(service.clone()),
+            );
+        }
     }
 
     pub fn analyze_dependencies(&mut self) {
@@ -103,6 +161,10 @@ impl AnalysisCollector for NgAnalysisResults {
 
         self.component_selector_map
             .extend(other.component_selector_map);
+        self.directive_selector_map
+            .extend(other.directive_selector_map);
+        self.pipe_selector_map.extend(other.pipe_selector_map);
+        self.path_map.extend(other.path_map);
     }
 
     fn process_file(
