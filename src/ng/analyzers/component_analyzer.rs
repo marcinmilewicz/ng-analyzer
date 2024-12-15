@@ -25,7 +25,7 @@ impl NgComponentAnalyzer {
         let template_path =
             DecoratorAnalyzer::get_string_prop(props, "templateUrl").unwrap_or_default();
 
-        let mut template_parser = TemplateParser::new();
+        let  template_parser = TemplateParser::new();
 
         let mut component = NgComponentInfo::new(
             class_name.to_string(),

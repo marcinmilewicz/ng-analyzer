@@ -10,7 +10,6 @@ pub struct DecoratorAnalysisCache {
 #[derive(Clone)]
 pub struct DecoratorAnalysis {
     pub name: String,
-    pub properties: Vec<(String, String)>,
     pub raw_props: Option<swc_ecma_ast::ObjectLit>,
 }
 
@@ -46,7 +45,7 @@ impl DecoratorAnalysisCache {
             if let swc_ecma_ast::Callee::Expr(expr) = &call.callee {
                 if let Expr::Ident(ident) = expr.as_ref() {
                     let name = ident.sym.to_string();
-                    let  properties = Vec::new();
+
                     let mut raw_props = None;
 
                     if let Some(first_arg) = call.args.first() {
@@ -55,11 +54,7 @@ impl DecoratorAnalysisCache {
                         }
                     }
 
-                    return Some(DecoratorAnalysis {
-                        name,
-                        properties,
-                        raw_props,
-                    });
+                    return Some(DecoratorAnalysis { name, raw_props });
                 }
             }
         }
@@ -71,17 +66,6 @@ pub struct DecoratorAnalyzer;
 
 impl DecoratorAnalyzer {
 
-
-    pub fn get_decorator_props(decorator: &Decorator) -> Option<&swc_ecma_ast::ObjectLit> {
-        if let Expr::Call(call) = &*decorator.expr {
-            if let Some(first_arg) = call.args.first() {
-                if let Expr::Object(obj) = &*first_arg.expr {
-                    return Some(obj);
-                }
-            }
-        }
-        None
-    }
 
     pub fn get_string_prop(obj: &swc_ecma_ast::ObjectLit, prop_name: &str) -> Option<String> {
         for prop in &obj.props {

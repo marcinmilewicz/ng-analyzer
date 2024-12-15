@@ -44,10 +44,6 @@ impl CachedFileReader {
         Ok(content)
     }
 
-    pub fn clear_cache(&self) {
-        self.cache.clear();
-    }
-
     pub fn remove_from_cache(&self, path: &Path) {
         self.cache.remove(path);
     }

@@ -14,7 +14,7 @@ use std::path::{Path, PathBuf};
 
 pub fn normalize_path<P: AsRef<Path>>(path: P) -> PathBuf {
     let path_str = path.as_ref().to_string_lossy();
-    let mut parts: Vec<&str> = path_str.split('/').collect();
+    let parts: Vec<&str> = path_str.split('/').collect();
     let mut result: Vec<String> = Vec::new();
 
     let needs_dot = path_str.starts_with("../") && !path_str.starts_with("./");

@@ -45,10 +45,6 @@ impl<'a> AngularVisitor<'a> {
         }
     }
 
-    fn get_imports(&self) -> &[ResolvedImport] {
-        &self.imports
-    }
-
     fn process_decorator(&mut self, decorator: &swc_ecma_ast::Decorator, class_name: &str) {
         let decorator_cache = DecoratorAnalysisCache::new();
 

@@ -5,6 +5,7 @@ use std::path::PathBuf;
 pub struct ResolvedImport {
     pub source: String,
     pub resolved_path: PathBuf,
+    pub relative_path: String,
     pub import_type: ImportType,
     pub imported_item: ImportedItem,
 }
@@ -21,7 +22,7 @@ impl fmt::Display for ResolvedImport {
         write!(f, "{:?} from {}", self.imported_item.name, self.source)?;
 
         if self.resolved_path != PathBuf::from("unknown") {
-            write!(f, " [resolved: {}]", self.resolved_path.display())?;
+            write!(f, " [resolved: {}]", self.relative_path)?;
         }
 
         Ok(())

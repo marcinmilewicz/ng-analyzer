@@ -26,15 +26,4 @@ impl NxProject {
             files,
         }
     }
-
-    pub fn get_config(&self) -> &NxProjectConfig {
-        &self.config
-    }
-    pub fn get_ts_config(&self) -> &TSConfig {
-        &self.ts_config
-    }
-
-    pub fn get_name(&self) -> &str {
-        &self.name
-    }
 }

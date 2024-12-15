@@ -6,7 +6,7 @@ use crate::analysis::resolvers::import_graph::ImportGraph;
 use crate::analysis::resolvers::import_resolver::ImportResolver;
 use crate::file_cache_reader::CachedFileReader;
 use rayon::prelude::*;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 use swc_common::SourceMap;
 use walkdir::WalkDir;
@@ -85,7 +85,8 @@ impl ProjectProcessor {
             .par_chunks(10)
             .map(|chunk| {
                 let mut local_resolver = ImportResolver::new(
-                    &context.project_path,
+                    context.base_path.clone(),
+                    context.project_path.clone(),
                     Some(self.shared_cache.clone_cache()),
                     Arc::clone(&self.import_graph),
                 );
