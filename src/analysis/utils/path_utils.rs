@@ -12,46 +12,45 @@ pub fn is_node_modules(path: &Path) -> bool {
 
 use std::path::{Path, PathBuf};
 
-/// Normalizes a file path by:
-/// - Resolving '..' (parent directory) references
-/// - Removing '.' (current directory) references
-/// - Maintaining relative/absolute path status
-///
-/// # Examples:
-/// ```
-/// let path = "./../ddd-hrm/libs/shared/ui/src/./lib/badge/badge.component.ts";
-/// let normalized = normalize_path(path);
-/// assert_eq!(normalized.to_str().unwrap(), "../ddd-hrm/libs/shared/ui/src/lib/badge/badge.component.ts");
-/// ```
 pub fn normalize_path<P: AsRef<Path>>(path: P) -> PathBuf {
-    let path = path.as_ref();
-    let mut components = Vec::new();
+    let path_str = path.as_ref().to_string_lossy();
+    let mut parts: Vec<&str> = path_str.split('/').collect();
+    let mut result: Vec<String> = Vec::new();
 
-    for component in path.components() {
-        match component {
-            std::path::Component::ParentDir => {
-                if !components.is_empty()
-                    && components.last() != Some(&std::path::Component::ParentDir)
-                {
-                    components.pop();
-                } else {
-                    components.push(component);
-                }
-            }
-            std::path::Component::CurDir => {
-                // Skip '.' components
-                continue;
-            }
-            _ => components.push(component),
-        }
+    let needs_dot = path_str.starts_with("../") && !path_str.starts_with("./");
+    if needs_dot {
+        result.push(".".to_string());
     }
 
-    components
-        .iter()
-        .fold(PathBuf::new(), |mut result, &component| {
-            result.push(component);
-            result
-        })
+    let mut i = 0;
+    while i < parts.len() {
+        match parts[i] {
+            "." => {
+                if i == 0 && !needs_dot {
+                    result.push(".".to_string());
+                }
+            }
+            ".." => {
+                if !result.is_empty()
+                    && result.last() != Some(&".".to_string())
+                    && result.last() != Some(&"..".to_string())
+                {
+                    result.pop();
+                } else {
+                    result.push("..".to_string());
+                }
+            }
+            "" => {
+                if i == 0 && !needs_dot {
+                    result.push("".to_string());
+                }
+            }
+            part => result.push(part.to_string()),
+        }
+        i += 1;
+    }
+
+    PathBuf::from(result.join("/"))
 }
 
 #[cfg(test)]
@@ -63,10 +62,10 @@ mod tests {
         let test_cases = vec![
             (
                 "./../ddd-hrm/libs/shared/ui/src/./lib/badge/badge.component.ts",
-                "../ddd-hrm/libs/shared/ui/src/lib/badge/badge.component.ts",
+                "./../ddd-hrm/libs/shared/ui/src/lib/badge/badge.component.ts",
             ),
-            ("./test/./path/../file.txt", "test/file.txt"),
-            ("../../../test.txt", "../../../test.txt"),
+            ("./test/./path/../file.txt", "./test/file.txt"),
+            ("../../../test.txt", "./../../../test.txt"),
         ];
 
         for (input, expected) in test_cases {
