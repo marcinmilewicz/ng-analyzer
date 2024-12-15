@@ -1,4 +1,5 @@
 use crate::analysis::models::import::ResolvedImport;
+use crate::analysis::utils::path_utils::get_relative_path;
 use crate::file_cache_reader::CachedFileReader;
 use crate::ng::analyzers::decorator_analyzer::{DecoratorAnalysis, DecoratorAnalyzer};
 use crate::ng::analyzers::template_analyzer::TemplateParser;
@@ -34,7 +35,7 @@ impl NgComponentAnalyzer {
             DecoratorAnalyzer::get_bool_prop(props, "standalone").unwrap_or(false),
             imports,
             file_path.to_path_buf(),
-            crate::analysis::utils::path_utils::get_relative_path(file_path, base_path),
+            get_relative_path(file_path, base_path),
             package_name.clone(),
         );
 

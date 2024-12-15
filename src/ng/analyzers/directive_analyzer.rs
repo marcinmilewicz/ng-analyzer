@@ -2,6 +2,7 @@ use std::path::Path;
 use swc_ecma_ast::{Expr, Lit, PropName};
 
 use crate::analysis::models::import::ResolvedImport;
+use crate::analysis::utils::path_utils::get_relative_path;
 use crate::ng::analyzers::decorator_analyzer::{DecoratorAnalysis, DecoratorAnalyzer};
 use crate::ng::models::ng_directive::NgDirectiveInfo;
 
@@ -30,7 +31,7 @@ impl NgDirectiveAnalyzer {
             Vec::new(),
             imports,
             file_path.to_path_buf(),
-            crate::analysis::utils::path_utils::get_relative_path(file_path, base_path),
+            get_relative_path(file_path, base_path),
             package_name.clone(),
         );
 

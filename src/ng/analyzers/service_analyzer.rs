@@ -1,4 +1,5 @@
 use crate::analysis::models::import::ResolvedImport;
+use crate::analysis::utils::path_utils::get_relative_path;
 use crate::ng::analyzers::decorator_analyzer::{DecoratorAnalysis, DecoratorAnalyzer};
 use crate::ng::models::NgServiceInfo;
 use std::path::Path;
@@ -25,7 +26,7 @@ impl NgServiceAnalyzer {
                 .unwrap_or_else(|| "root".to_string()),
             imports.clone(),
             file_path.to_path_buf(),
-            crate::analysis::utils::path_utils::get_relative_path(file_path, base_path),
+            get_relative_path(file_path, base_path),
             package_name.clone(),
         );
 

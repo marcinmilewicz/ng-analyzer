@@ -1,3 +1,4 @@
+use crate::analysis::utils::path_utils::get_relative_path;
 use crate::ng::analyzers::decorator_analyzer::DecoratorAnalysis;
 use crate::ng::models::NgModuleInfo;
 use std::path::Path;
@@ -29,7 +30,7 @@ impl NgModuleAnalyzer {
             exports,
             providers,
             file_path.to_path_buf(),
-            crate::analysis::utils::path_utils::get_relative_path(file_path, base_path),
+            get_relative_path(file_path, base_path),
             package_name.clone(),
         );
 
