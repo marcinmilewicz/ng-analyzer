@@ -65,8 +65,6 @@ impl DecoratorAnalysisCache {
 pub struct DecoratorAnalyzer;
 
 impl DecoratorAnalyzer {
-
-
     pub fn get_string_prop(obj: &swc_ecma_ast::ObjectLit, prop_name: &str) -> Option<String> {
         for prop in &obj.props {
             if let swc_ecma_ast::PropOrSpread::Prop(prop) = prop {

@@ -16,6 +16,7 @@ use crate::analysis::processor::file_processor::ProjectProcessor;
 use crate::analysis::resolvers::cache::ImportCache;
 use crate::analysis::resolvers::import_graph::ImportGraph;
 use crate::file_cache_reader::CachedFileReader;
+use crate::ng::analysis::dependency::processor::NgAnalysisProcessor;
 use crate::ng::ng_reporter::NgReporter;
 use crate::nx::nx_project::NxProject;
 
@@ -119,7 +120,8 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
         println!("📦 Project {} has been processed", project.name);
     }
 
-    results.analyze_dependencies();
+    let mut collector = NgAnalysisProcessor::new(&mut results);
+    collector.analyze_dependencies();
 
     metrics.total_time = total_start.elapsed();
 

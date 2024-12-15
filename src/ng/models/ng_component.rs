@@ -1,6 +1,6 @@
 use crate::analysis::models::import::ResolvedImport;
-use crate::ng::models::component_usage::NgReferences;
 use crate::ng::models::ng_base::NgBaseInfo;
+use crate::ng::models::ng_references::NgReferences;
 use crate::ng::models::ng_template::TemplateUsage;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

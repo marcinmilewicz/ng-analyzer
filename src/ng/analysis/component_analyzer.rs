@@ -1,8 +1,8 @@
 use crate::analysis::models::import::ResolvedImport;
 use crate::analysis::utils::path_utils::get_relative_path;
 use crate::file_cache_reader::CachedFileReader;
-use crate::ng::analyzers::decorator_analyzer::{DecoratorAnalysis, DecoratorAnalyzer};
-use crate::ng::analyzers::template_analyzer::TemplateParser;
+use crate::ng::analysis::decorator_analyzer::{DecoratorAnalysis, DecoratorAnalyzer};
+use crate::ng::analysis::template_analyzer::TemplateParser;
 use crate::ng::models::NgComponentInfo;
 use std::path::Path;
 
@@ -25,7 +25,7 @@ impl NgComponentAnalyzer {
         let template_path =
             DecoratorAnalyzer::get_string_prop(props, "templateUrl").unwrap_or_default();
 
-        let  template_parser = TemplateParser::new();
+        let template_parser = TemplateParser::new();
 
         let mut component = NgComponentInfo::new(
             class_name.to_string(),

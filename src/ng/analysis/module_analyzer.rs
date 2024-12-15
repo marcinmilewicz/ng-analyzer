@@ -1,5 +1,5 @@
 use crate::analysis::utils::path_utils::get_relative_path;
-use crate::ng::analyzers::decorator_analyzer::DecoratorAnalysis;
+use crate::ng::analysis::decorator_analyzer::DecoratorAnalysis;
 use crate::ng::models::NgModuleInfo;
 use std::path::Path;
 use swc_ecma_ast::{Expr, PropName};

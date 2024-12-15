@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use regex::Regex;
+use std::collections::HashSet;
 
 use crate::ng::models::ng_template::TemplateUsage;
 
@@ -34,13 +34,12 @@ impl TemplateParser {
     fn find_directives(&self, template: &str) -> HashSet<String> {
         let mut directives = HashSet::new();
 
-
         let structural_directive_regex = Regex::new(r"\*ng([A-Z][a-zA-Z]*)").unwrap();
         directives.extend(
             structural_directive_regex
                 .captures_iter(template)
                 .filter_map(|cap| cap.get(1))
-                .map(|m| format!("ng{}", m.as_str()))
+                .map(|m| format!("ng{}", m.as_str())),
         );
 
         let attribute_directive_regex = Regex::new(r"\[(ng[A-Z][a-zA-Z]*)\]").unwrap();
@@ -48,7 +47,7 @@ impl TemplateParser {
             attribute_directive_regex
                 .captures_iter(template)
                 .filter_map(|cap| cap.get(1))
-                .map(|m| m.as_str().to_string())
+                .map(|m| m.as_str().to_string()),
         );
 
         directives
