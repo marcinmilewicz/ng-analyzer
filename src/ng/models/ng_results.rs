@@ -106,13 +106,13 @@ impl AnalysisCollector for NgAnalysisResults {
     }
 
     fn process_file(
-        path: &PathBuf,
+        file_path: &PathBuf,
         resolver: &mut ImportResolver,
         context: &AnalysisContext,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         ng::visitors::analyze_file(
-            path,
-            &context.project_path,
+            file_path,
+            context.base_path.clone(),
             &context.source_map,
             context.project_name.clone().parse()?,
             context.project_ts_config.clone(),

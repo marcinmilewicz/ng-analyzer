@@ -9,7 +9,7 @@ use crate::ng::analyzers::module_analyzer::NgModuleAnalyzer;
 use crate::ng::analyzers::pipe_analyzer::NgPipeAnalyzer;
 use crate::ng::analyzers::service_analyzer::NgServiceAnalyzer;
 use crate::ng::models::NgAnalysisResults;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use swc_ecma_ast::{Decl, ImportDecl, Module, ModuleDecl, ModuleItem};
 use swc_ecma_visit::Visit;
 
@@ -19,7 +19,7 @@ pub struct AngularVisitor<'a> {
     import_resolver: &'a mut ImportResolver,
     imports: Vec<ResolvedImport>,
     package_name: String,
-    project_root: std::path::PathBuf,
+    base_path: std::path::PathBuf,
     pub results: NgAnalysisResults,
     ts_config: TSConfig,
 }
@@ -27,7 +27,7 @@ pub struct AngularVisitor<'a> {
 impl<'a> AngularVisitor<'a> {
     pub fn new(
         file_path: &Path,
-        project_root: &Path,
+        base_path: PathBuf,
         package_name: String,
         tsconfig: TSConfig,
         import_resolver: &'a mut ImportResolver,
@@ -35,7 +35,7 @@ impl<'a> AngularVisitor<'a> {
     ) -> Self {
         Self {
             file_path: file_path.to_path_buf(),
-            project_root: project_root.to_path_buf(),
+            base_path,
             results: NgAnalysisResults::default(),
             imports: Vec::new(),
             package_name,
@@ -58,7 +58,7 @@ impl<'a> AngularVisitor<'a> {
                     if let Some(component) = NgComponentAnalyzer::analyze(
                         &analysis,
                         &self.file_path,
-                        &self.project_root,
+                        &self.base_path,
                         class_name,
                         &self.package_name,
                         self.imports.clone(),
@@ -71,7 +71,7 @@ impl<'a> AngularVisitor<'a> {
                     if let Some(service) = NgServiceAnalyzer::analyze(
                         &analysis,
                         &self.file_path,
-                        &self.project_root,
+                        &self.base_path,
                         class_name,
                         &self.package_name,
                         &self.imports,
@@ -83,7 +83,7 @@ impl<'a> AngularVisitor<'a> {
                     if let Some(module) = NgModuleAnalyzer::analyze(
                         &analysis,
                         &self.file_path,
-                        &self.project_root,
+                        &self.base_path,
                         class_name,
                         &self.package_name,
                     ) {
@@ -94,7 +94,7 @@ impl<'a> AngularVisitor<'a> {
                     if let Some(directive) = NgDirectiveAnalyzer::analyze(
                         &analysis,
                         &self.file_path,
-                        &self.project_root,
+                        &self.base_path,
                         class_name,
                         &self.package_name,
                         self.imports.clone(),
@@ -106,7 +106,7 @@ impl<'a> AngularVisitor<'a> {
                     if let Some(pipe) = NgPipeAnalyzer::analyze(
                         &analysis,
                         &self.file_path,
-                        &self.project_root,
+                        &self.base_path,
                         class_name,
                         &self.package_name,
                         self.imports.clone(),

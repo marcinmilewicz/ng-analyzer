@@ -5,6 +5,7 @@ use std::sync::Arc;
 use swc_common::SourceMap;
 
 pub struct AnalysisContext {
+    pub base_path: PathBuf,
     pub project_path: PathBuf,
     pub project_name: Arc<String>,
     pub project_ts_config: TSConfig,

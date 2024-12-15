@@ -11,7 +11,7 @@ impl NgDirectiveAnalyzer {
     pub fn analyze(
         analysis: &DecoratorAnalysis,
         file_path: &Path,
-        project_root: &Path,
+        base_path: &Path,
         class_name: &str,
         package_name: &String,
         imports: Vec<ResolvedImport>,
@@ -30,7 +30,7 @@ impl NgDirectiveAnalyzer {
             Vec::new(),
             imports,
             file_path.to_path_buf(),
-            crate::analysis::utils::path_utils::get_relative_path(file_path, project_root),
+            crate::analysis::utils::path_utils::get_relative_path(file_path, base_path),
             package_name.clone(),
         );
 

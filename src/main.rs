@@ -24,7 +24,7 @@ use crate::nx::nx_project::NxProject;
 struct Args {
     /// Path to the project directory
     #[arg(short = 'd', long, default_value = ".")]
-    project_path: PathBuf,
+    base_path: PathBuf,
 
     /// Output file for analysis results
     #[arg(short, long, default_value = "angular-analysis.json")]
@@ -57,19 +57,19 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
 
     if args.verbose {
         println!("🔍 Starting analysis with following parameters:");
-        println!("Project path: {:?}", args.project_path);
+        println!("Project path: {:?}", args.base_path);
 
         println!("Output file: {:?}", args.output_file);
     }
 
     let source_map = Arc::new(SourceMap::default());
-    let project_path = Path::new(&args.project_path);
+    let base_path = Path::new(&args.base_path);
 
     println!("🔍 Loading NX Workspace configuration...");
     let mut results = NgAnalysisResults::default();
 
     let workspace_start = Instant::now();
-    let mut nx_workspace = NxWorkspace::new(project_path.to_path_buf());
+    let mut nx_workspace = NxWorkspace::new(base_path.to_path_buf());
     nx_workspace.load_configuration()?;
     metrics.workspace_load_time = workspace_start.elapsed();
 
@@ -96,6 +96,7 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
 
     for (project_path, project) in &projects {
         let mut processor = ProjectProcessor::new(
+            base_path.to_path_buf(),
             project_path.clone(),
             project.name.clone(),
             project.ts_config.clone(),

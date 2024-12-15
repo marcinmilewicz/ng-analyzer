@@ -6,7 +6,7 @@ use crate::analysis::resolvers::import_graph::ImportGraph;
 use crate::analysis::resolvers::import_resolver::ImportResolver;
 use crate::file_cache_reader::CachedFileReader;
 use rayon::prelude::*;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use swc_common::SourceMap;
 use walkdir::WalkDir;
@@ -19,7 +19,8 @@ pub struct ProjectProcessor {
 
 impl ProjectProcessor {
     pub fn new(
-        project_path: PathBuf,
+        base_path: PathBuf,
+        project_path:PathBuf,
         project_name: String,
         project_ts_config: TSConfig,
         shared_cache: ImportCache,
@@ -28,6 +29,7 @@ impl ProjectProcessor {
         import_graph: Arc<ImportGraph>,
     ) -> Self {
         let context = AnalysisContext {
+            base_path,
             project_path,
             project_name: Arc::new(project_name),
             project_ts_config,
@@ -90,8 +92,8 @@ impl ProjectProcessor {
 
                 let mut chunk_results = T::default();
 
-                for path in chunk {
-                    if let Ok(file_results) = T::process_file(path, &mut local_resolver, context) {
+                for file_path in chunk {
+                    if let Ok(file_results) = T::process_file(file_path, &mut local_resolver, context) {
                         chunk_results.extend(file_results);
                     }
                 }

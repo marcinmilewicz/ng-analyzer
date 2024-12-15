@@ -9,7 +9,7 @@ impl NgServiceAnalyzer {
     pub fn analyze(
         analysis: &DecoratorAnalysis,
         file_path: &Path,
-        project_root: &Path,
+        base_path: &Path,
         class_name: &str,
         package_name: &String,
         imports: &Vec<ResolvedImport>,
@@ -25,7 +25,7 @@ impl NgServiceAnalyzer {
                 .unwrap_or_else(|| "root".to_string()),
             imports.clone(),
             file_path.to_path_buf(),
-            crate::analysis::utils::path_utils::get_relative_path(file_path, project_root),
+            crate::analysis::utils::path_utils::get_relative_path(file_path, base_path),
             package_name.clone(),
         );
 
