@@ -1,4 +1,5 @@
 use crate::analysis::models::import::ResolvedImport;
+use crate::ng::models::ng_references::NgReferences;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -9,6 +10,8 @@ pub struct NgBaseInfo {
     pub source_path: PathBuf,
     pub relative_path: String,
     pub package_name: String,
+    #[serde(default)]
+    pub references: NgReferences,
 }
 
 impl NgBaseInfo {
@@ -25,6 +28,7 @@ impl NgBaseInfo {
             source_path,
             relative_path,
             package_name,
+            references: NgReferences::default(),
         };
         base
     }

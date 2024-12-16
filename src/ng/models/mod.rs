@@ -1,8 +1,8 @@
-mod ng_base;
-mod ng_component;
+pub mod ng_base;
+pub mod ng_component;
 pub mod ng_directive;
 pub mod ng_element;
-mod ng_module;
+pub mod ng_module;
 pub mod ng_pipe;
 pub mod ng_references;
 pub mod ng_results;

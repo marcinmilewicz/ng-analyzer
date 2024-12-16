@@ -21,7 +21,7 @@ impl<'a> NgAnalysisProcessor<'a> {
     pub fn analyze_dependencies(&mut self) {
         let (selector_maps, path_map) = Self::build_maps(&self.results);
 
-        let analyzer = NgDependencyAnalyzer::new(selector_maps, path_map);
+        let mut analyzer = NgDependencyAnalyzer::new(selector_maps, path_map);
         analyzer.analyze_dependencies(&mut self.results);
     }
 }
