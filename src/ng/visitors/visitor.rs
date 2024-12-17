@@ -8,14 +8,10 @@ use crate::ng::analysis::directive_analyzer::NgDirectiveAnalyzer;
 use crate::ng::analysis::module_analyzer::NgModuleAnalyzer;
 use crate::ng::analysis::pipe_analyzer::NgPipeAnalyzer;
 use crate::ng::analysis::service_analyzer::NgServiceAnalyzer;
-
-use crate::analysis::utils::path_utils::get_relative_path;
-use crate::ng::analysis::ng_results::NgAnalysisResults;
-use crate::ng::models::ng_other::NgOtherInfo;
-use crate::ng::models::ng_spec::NgTestSpecInfo;
 use std::path::{Path, PathBuf};
 use swc_ecma_ast::{Decl, ImportDecl, Module, ModuleDecl, ModuleItem};
 use swc_ecma_visit::Visit;
+use crate::ng::analysis::ng_results::NgAnalysisResults;
 
 pub struct AngularVisitor<'a> {
     file_path: std::path::PathBuf,
@@ -47,13 +43,6 @@ impl<'a> AngularVisitor<'a> {
             import_resolver,
             file_reader,
         }
-    }
-
-    fn is_spec_file(&self) -> bool {
-        self.file_path
-            .to_str()
-            .map(|s| s.ends_with(".spec.ts"))
-            .unwrap_or(false)
     }
 
     fn process_decorator(&mut self, decorator: &swc_ecma_ast::Decorator, class_name: &str) {
@@ -162,6 +151,8 @@ impl<'a> AngularVisitor<'a> {
         {
             resolved_import.imported_item = imported_item;
             self.imports.push(resolved_import);
+        } else {
+            println!("Failed to resolve import: {} from {}", imported_item.name, src);
         }
     }
 }
@@ -175,53 +166,22 @@ impl<'a> Visit for AngularVisitor<'a> {
     }
 
     fn visit_module(&mut self, module: &Module) {
-        let mut has_angular_decorator = false;
-        let mut class_name = String::new();
-
-        // Process imports first
         for item in &module.body {
             if let ModuleItem::ModuleDecl(ModuleDecl::Import(import_decl)) = item {
                 self.visit_import_decl(import_decl);
             }
         }
 
-        // Look for decorated classes
         for item in &module.body {
             if let ModuleItem::ModuleDecl(ModuleDecl::ExportDecl(export_decl)) = item {
                 if let Decl::Class(class_decl) = &export_decl.decl {
-                    class_name = class_decl.ident.sym.to_string();
-
+                    let class_name = &class_decl.ident.sym.to_string();
                     for decorator in &class_decl.class.decorators {
-                        has_angular_decorator = true;
-                        self.process_decorator(decorator, &class_name);
+                        self.process_decorator(decorator, class_name);
                     }
                 }
             }
         }
 
-        // If no Angular decorators were found but we have imports, create an Other type
-        if !has_angular_decorator && !self.imports.is_empty() {
-            if self.is_spec_file() {
-                // Handle as test spec
-                let test_spec = NgTestSpecInfo::new(
-                    class_name,
-                    self.imports.clone(),
-                    self.file_path.clone(),
-                    get_relative_path(&self.file_path, &self.base_path),
-                    self.package_name.clone(),
-                );
-                self.results.test_specs.push(test_spec);
-            } else {
-                // Handle as other
-                let other = NgOtherInfo::new(
-                    class_name,
-                    self.imports.clone(),
-                    self.file_path.clone(),
-                    get_relative_path(&self.file_path, &self.base_path),
-                    self.package_name.clone(),
-                );
-                self.results.others.push(other);
-            }
-        }
     }
 }

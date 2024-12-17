@@ -55,7 +55,7 @@ impl NgReporter {
         println!("    Template: {}", component.template_path);
         println!(
             "    Usage in templates: {}",
-            component.base.references.used_in_templates.len()
+            component.base.references.used_by_template.len()
         );
 
         if !component.base.imports.is_empty() {

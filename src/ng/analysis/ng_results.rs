@@ -9,9 +9,9 @@ use crate::ng::models::ng_directive::NgDirectiveInfo;
 use crate::ng::models::ng_element::NgElement;
 use crate::ng::models::ng_other::NgOtherInfo;
 use crate::ng::models::ng_pipe::NgPipeInfo;
+use crate::ng::models::ng_spec::NgTestSpecInfo;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use crate::ng::models::ng_spec::NgTestSpecInfo;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct NgAnalysisResults {
@@ -25,9 +25,6 @@ pub struct NgAnalysisResults {
     pub services: Vec<NgServiceInfo>,
     pub test_specs: Vec<NgTestSpecInfo>,
 
-    pub component_selector_map: HashMap<String, NgComponentInfo>,
-    pub directive_selector_map: HashMap<String, NgDirectiveInfo>,
-    pub pipe_selector_map: HashMap<String, NgPipeInfo>,
     #[serde(skip)]
     pub path_map: HashMap<String, NgElement>,
 }
