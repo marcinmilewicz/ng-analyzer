@@ -11,6 +11,7 @@ use crate::ng::models::ng_other::NgOtherInfo;
 use crate::ng::models::ng_pipe::NgPipeInfo;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use crate::ng::models::ng_spec::NgTestSpecInfo;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct NgAnalysisResults {
@@ -19,9 +20,10 @@ pub struct NgAnalysisResults {
     pub components: Vec<NgComponentInfo>,
     pub directives: Vec<NgDirectiveInfo>,
     pub modules: Vec<NgModuleInfo>,
+    pub others: Vec<NgOtherInfo>,
     pub pipes: Vec<NgPipeInfo>,
     pub services: Vec<NgServiceInfo>,
-    pub others: Vec<NgOtherInfo>,
+    pub test_specs: Vec<NgTestSpecInfo>,
 
     pub component_selector_map: HashMap<String, NgComponentInfo>,
     pub directive_selector_map: HashMap<String, NgDirectiveInfo>,
@@ -33,11 +35,12 @@ pub struct NgAnalysisResults {
 impl AnalysisCollector for NgAnalysisResults {
     fn extend(&mut self, other: Self) {
         self.components.extend(other.components);
-        self.services.extend(other.services);
-        self.modules.extend(other.modules);
         self.directives.extend(other.directives);
-        self.pipes.extend(other.pipes);
+        self.modules.extend(other.modules);
         self.others.extend(other.others);
+        self.pipes.extend(other.pipes);
+        self.services.extend(other.services);
+        self.test_specs.extend(other.test_specs);
     }
 
     fn process_file(

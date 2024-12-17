@@ -8,6 +8,7 @@ pub mod ng_references;
 pub mod ng_service;
 pub mod ng_template;
 pub mod ng_other;
+pub mod ng_spec;
 
 pub use ng_component::NgComponentInfo;
 pub use ng_module::NgModuleInfo;

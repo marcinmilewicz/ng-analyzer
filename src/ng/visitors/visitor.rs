@@ -9,12 +9,13 @@ use crate::ng::analysis::module_analyzer::NgModuleAnalyzer;
 use crate::ng::analysis::pipe_analyzer::NgPipeAnalyzer;
 use crate::ng::analysis::service_analyzer::NgServiceAnalyzer;
 
-use std::path::{Path, PathBuf};
-use swc_ecma_ast::{Decl, ImportDecl, Module, ModuleDecl, ModuleItem};
-use swc_ecma_visit::Visit;
 use crate::analysis::utils::path_utils::get_relative_path;
 use crate::ng::analysis::ng_results::NgAnalysisResults;
 use crate::ng::models::ng_other::NgOtherInfo;
+use crate::ng::models::ng_spec::NgTestSpecInfo;
+use std::path::{Path, PathBuf};
+use swc_ecma_ast::{Decl, ImportDecl, Module, ModuleDecl, ModuleItem};
+use swc_ecma_visit::Visit;
 
 pub struct AngularVisitor<'a> {
     file_path: std::path::PathBuf,
@@ -46,6 +47,13 @@ impl<'a> AngularVisitor<'a> {
             import_resolver,
             file_reader,
         }
+    }
+
+    fn is_spec_file(&self) -> bool {
+        self.file_path
+            .to_str()
+            .map(|s| s.ends_with(".spec.ts"))
+            .unwrap_or(false)
     }
 
     fn process_decorator(&mut self, decorator: &swc_ecma_ast::Decorator, class_name: &str) {
@@ -193,14 +201,27 @@ impl<'a> Visit for AngularVisitor<'a> {
 
         // If no Angular decorators were found but we have imports, create an Other type
         if !has_angular_decorator && !self.imports.is_empty() {
-            let other = NgOtherInfo::new(
-                class_name,
-                self.imports.clone(),
-                self.file_path.clone(),
-                get_relative_path(&self.file_path, &self.base_path),
-                self.package_name.clone(),
-            );
-            self.results.others.push(other);
+            if self.is_spec_file() {
+                // Handle as test spec
+                let test_spec = NgTestSpecInfo::new(
+                    class_name,
+                    self.imports.clone(),
+                    self.file_path.clone(),
+                    get_relative_path(&self.file_path, &self.base_path),
+                    self.package_name.clone(),
+                );
+                self.results.test_specs.push(test_spec);
+            } else {
+                // Handle as other
+                let other = NgOtherInfo::new(
+                    class_name,
+                    self.imports.clone(),
+                    self.file_path.clone(),
+                    get_relative_path(&self.file_path, &self.base_path),
+                    self.package_name.clone(),
+                );
+                self.results.others.push(other);
+            }
         }
     }
 }
