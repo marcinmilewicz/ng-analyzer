@@ -1,6 +1,6 @@
 use crate::ng::analysis::dependency::analyzer::NgDependencyAnalyzer;
 use crate::ng::analysis::dependency::maps::{NgPathMap, NgSelectorMaps};
-use crate::ng::models::NgAnalysisResults;
+use crate::ng::analysis::ng_results::NgAnalysisResults;
 
 pub struct NgAnalysisProcessor<'a> {
     results: &'a mut NgAnalysisResults,

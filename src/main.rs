@@ -8,7 +8,7 @@ mod nx;
 
 use crate::nx::NxWorkspace;
 use analysis::timing::TimingMetrics;
-use ng::models::NgAnalysisResults;
+
 use std::sync::Arc;
 use swc_common::SourceMap;
 
@@ -17,6 +17,7 @@ use crate::analysis::resolvers::cache::ImportCache;
 use crate::analysis::resolvers::import_graph::ImportGraph;
 use crate::file_cache_reader::CachedFileReader;
 use crate::ng::analysis::dependency::processor::NgAnalysisProcessor;
+use crate::ng::analysis::ng_results::NgAnalysisResults;
 use crate::ng::ng_reporter::NgReporter;
 use crate::nx::nx_project::NxProject;
 
@@ -117,7 +118,7 @@ fn process_workspace(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
 
         processor.process_files(&mut results);
 
-        println!("📦 Project {} has been processed", project.name);
+        //println!("📦 Project {} has been processed", project.name);
     }
 
     let mut collector = NgAnalysisProcessor::new(&mut results);

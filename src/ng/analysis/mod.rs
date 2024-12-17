@@ -6,3 +6,4 @@ pub mod module_analyzer;
 pub mod pipe_analyzer;
 pub mod service_analyzer;
 pub mod template_analyzer;
+pub mod ng_results;

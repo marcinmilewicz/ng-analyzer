@@ -1,8 +1,8 @@
 use crate::ng::analysis::dependency::maps::{NgPathMap, NgSelectorMaps};
-use crate::ng::models::ng_references::NgReferences;
-use crate::ng::models::{NgAnalysisResults, NgComponentInfo};
-use std::collections::HashMap;
+use crate::ng::analysis::ng_results::NgAnalysisResults;
 use crate::ng::models::ng_base::NgBaseInfo;
+use crate::ng::models::ng_references::NgReferences;
+use std::collections::HashMap;
 
 pub struct NgDependencyAnalyzer {
     selector_maps: NgSelectorMaps,

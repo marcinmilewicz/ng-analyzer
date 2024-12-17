@@ -1,7 +1,8 @@
+use crate::ng::analysis::ng_results::NgAnalysisResults;
 use crate::ng::models::ng_directive::NgDirectiveInfo;
 use crate::ng::models::ng_element::NgElement;
 use crate::ng::models::ng_pipe::NgPipeInfo;
-use crate::ng::models::{NgAnalysisResults, NgComponentInfo};
+use crate::ng::models::NgComponentInfo;
 use std::collections::HashMap;
 
 #[derive(Default)]

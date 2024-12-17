@@ -1,4 +1,5 @@
-use crate::ng::models::{NgAnalysisResults, NgComponentInfo, NgServiceInfo};
+use crate::ng::analysis::ng_results::NgAnalysisResults;
+use crate::ng::models::{NgComponentInfo, NgServiceInfo};
 
 pub struct NgReporter;
 

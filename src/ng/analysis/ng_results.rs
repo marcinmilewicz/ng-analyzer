@@ -1,12 +1,13 @@
-use super::{NgComponentInfo, NgModuleInfo, NgServiceInfo};
 use crate::analysis::resolvers::import_resolver::ImportResolver;
 use crate::ng;
+use crate::ng::models::{NgComponentInfo, NgModuleInfo, NgServiceInfo};
 use std::collections::HashMap;
 
 use crate::analysis::processor::collector::AnalysisCollector;
 use crate::analysis::processor::context::AnalysisContext;
 use crate::ng::models::ng_directive::NgDirectiveInfo;
 use crate::ng::models::ng_element::NgElement;
+use crate::ng::models::ng_other::NgOtherInfo;
 use crate::ng::models::ng_pipe::NgPipeInfo;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -20,6 +21,7 @@ pub struct NgAnalysisResults {
     pub modules: Vec<NgModuleInfo>,
     pub pipes: Vec<NgPipeInfo>,
     pub services: Vec<NgServiceInfo>,
+    pub others: Vec<NgOtherInfo>,
 
     pub component_selector_map: HashMap<String, NgComponentInfo>,
     pub directive_selector_map: HashMap<String, NgDirectiveInfo>,
@@ -35,6 +37,7 @@ impl AnalysisCollector for NgAnalysisResults {
         self.modules.extend(other.modules);
         self.directives.extend(other.directives);
         self.pipes.extend(other.pipes);
+        self.others.extend(other.others);
     }
 
     fn process_file(

@@ -1,4 +1,4 @@
-use crate::ng::models::NgAnalysisResults;
+
 use swc_ecma_visit::VisitWith;
 
 use crate::analysis::models::ts_config::TSConfig;
@@ -12,6 +12,7 @@ use swc_common::input::StringInput;
 use swc_common::SourceMap;
 use swc_ecma_parser::lexer::Lexer;
 use swc_ecma_parser::{Parser, Syntax, TsSyntax};
+use crate::ng::analysis::ng_results::NgAnalysisResults;
 
 mod visitor;
 

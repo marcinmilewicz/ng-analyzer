@@ -8,10 +8,13 @@ use crate::ng::analysis::directive_analyzer::NgDirectiveAnalyzer;
 use crate::ng::analysis::module_analyzer::NgModuleAnalyzer;
 use crate::ng::analysis::pipe_analyzer::NgPipeAnalyzer;
 use crate::ng::analysis::service_analyzer::NgServiceAnalyzer;
-use crate::ng::models::NgAnalysisResults;
+
 use std::path::{Path, PathBuf};
 use swc_ecma_ast::{Decl, ImportDecl, Module, ModuleDecl, ModuleItem};
 use swc_ecma_visit::Visit;
+use crate::analysis::utils::path_utils::get_relative_path;
+use crate::ng::analysis::ng_results::NgAnalysisResults;
+use crate::ng::models::ng_other::NgOtherInfo;
 
 pub struct AngularVisitor<'a> {
     file_path: std::path::PathBuf,
@@ -164,21 +167,40 @@ impl<'a> Visit for AngularVisitor<'a> {
     }
 
     fn visit_module(&mut self, module: &Module) {
+        let mut has_angular_decorator = false;
+        let mut class_name = String::new();
+
+        // Process imports first
         for item in &module.body {
             if let ModuleItem::ModuleDecl(ModuleDecl::Import(import_decl)) = item {
                 self.visit_import_decl(import_decl);
             }
         }
 
+        // Look for decorated classes
         for item in &module.body {
             if let ModuleItem::ModuleDecl(ModuleDecl::ExportDecl(export_decl)) = item {
                 if let Decl::Class(class_decl) = &export_decl.decl {
-                    let class_name = &class_decl.ident.sym.to_string();
+                    class_name = class_decl.ident.sym.to_string();
+
                     for decorator in &class_decl.class.decorators {
-                        self.process_decorator(decorator, class_name);
+                        has_angular_decorator = true;
+                        self.process_decorator(decorator, &class_name);
                     }
                 }
             }
+        }
+
+        // If no Angular decorators were found but we have imports, create an Other type
+        if !has_angular_decorator && !self.imports.is_empty() {
+            let other = NgOtherInfo::new(
+                class_name,
+                self.imports.clone(),
+                self.file_path.clone(),
+                get_relative_path(&self.file_path, &self.base_path),
+                self.package_name.clone(),
+            );
+            self.results.others.push(other);
         }
     }
 }
