@@ -19,6 +19,8 @@ impl ImportPathResolver {
     ) -> (Option<PathBuf>, ImportType) {
         let import_type = self.determine_import_type(import_path);
 
+        println!("Import type: {:?}", import_type);
+
         match import_type {
             ImportType::Relative => (
                 self.resolve_relative_import(import_path, current_file),
@@ -81,7 +83,9 @@ impl ImportPathResolver {
                 }
             }
         }
-        self.resolve_node_module_import(import_path)
+        // todo resolve_node_module_import shoudl work somehow
+        //self.resolve_node_module_import(import_path)
+        return None;
     }
 
     pub fn resolve_node_module_import(&self, import_path: &str) -> Option<PathBuf> {

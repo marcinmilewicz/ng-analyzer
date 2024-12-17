@@ -20,4 +20,5 @@ rayon = "1.10.0"
 dashmap = "5.5.3"
 clap = { version = "4.5.23", features = ["derive", ] }
 regex = "1.11.1"
+log = "0.4.22"
 

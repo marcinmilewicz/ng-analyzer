@@ -835,6 +835,7 @@ version = "0.2.0"
 dependencies = [
  "clap",
  "dashmap",
+ "log",
  "rayon",
  "regex",
  "serde",

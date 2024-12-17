@@ -24,7 +24,7 @@ impl ImportResolver {
         shared_cache: Option<ImportCache>,
         import_graph: Arc<ImportGraph>,
     ) -> Self {
-        let import_path_resolver= ImportPathResolver::new(project_path.clone());
+        let import_path_resolver= ImportPathResolver::new(base_path.clone());
         Self {
             base_path,
             cache: shared_cache.unwrap_or_else(ImportCache::new),
@@ -46,31 +46,37 @@ impl ImportResolver {
                 .add_dependency(current_file.to_path_buf(), path.resolved_path.clone());
 
             return Some(path.clone());
-        } else {
-            let (resolved_path, import_type) =
-                self.import_path_resolver
-                    .resolve_import(import_path, current_file, ts_paths);
-
-            let final_path = self
-                .import_parser
-                .find_export_declaration(&resolved_path.unwrap_or_default(), name)?;
-
-            let resolved_import =
-                self.create_resolved_import(import_path, name, final_path, import_type, self.base_path.clone());
-
-            self.cache.insert(
-                String::from(import_path),
-                name.to_string(),
-                resolved_import.clone(),
-            );
-
-            self.import_graph.add_dependency(
-                current_file.to_path_buf(),
-                resolved_import.resolved_path.clone(),
-            );
-
-            Some(resolved_import)
         }
+
+        println!("Import path: {}", import_path);
+
+        let (resolved_path, import_type) =
+            self.import_path_resolver
+                .resolve_import(import_path, current_file, ts_paths);
+
+        println!("Resolve path: {:?}", resolved_path);
+
+        let final_path = self
+            .import_parser
+            .find_export_declaration(&resolved_path.unwrap_or_default(), name)?;
+
+        println!("Final path: {:?}", final_path);
+
+        let resolved_import =
+            self.create_resolved_import(import_path, name, final_path, import_type, self.base_path.clone());
+
+        self.cache.insert(
+            String::from(import_path),
+            name.to_string(),
+            resolved_import.clone(),
+        );
+
+        self.import_graph.add_dependency(
+            current_file.to_path_buf(),
+            resolved_import.resolved_path.clone(),
+        );
+
+        Some(resolved_import)
 
 
     }
