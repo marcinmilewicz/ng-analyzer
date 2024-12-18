@@ -54,9 +54,19 @@ impl NgReporter {
         println!("    Package: {}", component.base.package_name);
         println!("    Template: {}", component.template_path);
         println!(
-            "    Usage in templates: {}",
+            "    Usage by templates: {}",
             component.base.references.used_by_template.len()
         );
+        println!(
+            "    Usage by files: {}",
+            component.base.references.used_by_imports.len()
+        );
+        if(!component.base.references.used_by_imports.is_empty()) {
+            println!("    Usage by files:");
+            for usage in &component.base.references.used_by_imports {
+                println!("      - {}", usage);
+            }
+        }
 
         if !component.base.imports.is_empty() {
             println!("    Imports:");
