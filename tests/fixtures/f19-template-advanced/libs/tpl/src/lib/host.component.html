@@ -1,0 +1,8 @@
+@if (items | uiHas) {
+  <button fixBtn>compound selector on button</button>
+  <a fixBtn>must NOT match - not a button</a>
+}
+@for (item of items | uiSort; track item) {
+  <span>{{ item }}</span>
+}
+<ng-container *ngIf="items"></ng-container>

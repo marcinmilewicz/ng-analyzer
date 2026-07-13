@@ -19,13 +19,12 @@ impl NgBaseInfo {
         relative_path: String,
         package_name: String,
     ) -> Self {
-        let base = Self {
+        Self {
             name,
             imports,
             source_path,
             relative_path,
             package_name,
-        };
-        base
+        }
     }
 }

@@ -1,179 +1,163 @@
-# ngAnalyzer - Angular NX Project Analysis Tool
+# nxAnalyzer - TypeScript NX Workspace Analysis Tool
 
-A Rust-based static analysis tool for Angular projects in NX workspaces. This tool analyzes Angular components, services, modules, directives, and pipes to provide insights into project structure and dependencies.
+A Rust-based static analyzer for NX workspaces — Angular, React and Next.js: framework-aware semantics (Angular templates, DI and lazy routes; JSX renders; Next.js file conventions), a framework-agnostic symbol graph, dead-code detection, package statistics and architecture checks — as one fast native binary.
 
 ## Features
 
-- **NX Workspace Support**: Automatically detects and processes NX workspace projects
-- **Angular-specific files analysis**:
-    - Components analysis 
-    - Services analysis 
-    - NgModules analysis 
-    - Directives analysis
-    - Pipes analysis (name, pure/impure status)
-- **Import Analysis**: Resolves and tracks imports across files
-- **Import Graph**: Dependency tracking between files
-- **JSON Output**: Results exported in structured JSON format
+- **NX Workspace Support**
+  - `project.json` with optional `name`/`sourceRoot` (inferred), tags
+  - tsconfig `extends` chains resolved recursively (including node_modules specifiers)
+  - fallback to `tsconfig.lib.json` / `tsconfig.app.json` / workspace config
+- **Symbol graph** (framework-agnostic)
+  - all exports/imports per file (aliases, namespaces, defaults, re-exports, `export * as`)
+  - barrels (`index.ts`) followed to the declaring file
+  - dynamic `import()` as lazy edges; identifier/type references (covers DI)
+  - `.ts`, `.tsx` (JSX), `.js/.jsx/.mjs/.cjs` (with `--typescript-only false`)
+- **Angular semantics**
+  - components (selector, standalone incl. the Angular 19 default, `imports`, providers,
+    inline templates, `styleUrl(s)`, signal `input()`/`output()`/`model()` + decorators),
+    directives, pipes, services (`@Injectable()` without args too), NgModules (full metadata)
+  - **template analysis**: element/attribute/structural selector matching, pipes,
+    `@if/@for` and `*ngIf` alike — usage in HTML counts as a dependency edge
+  - lazy routes (`loadChildren`/`loadComponent`) keep lazy features alive
+- **React (basic)**
+  - function components in `.tsx` (incl. `memo`/`forwardRef`), JSX usage edges,
+    `React.lazy()`, **prop usage statistics** per component
+- **Analyses**
+  - `unused`: unused exports, test-only exports, Angular entities wired-up-but-never-rendered,
+    **unused import statements**, orphan files — reachability-aware (templates, DI, lazy routes,
+    bootstrap). An import whose binding is never referenced does not keep its target alive;
+    `import * as ns` conservatively keeps every export of the target alive; `import './x'`
+    counts as an edge
+  - `resolution`: how many import specifiers failed to resolve. Every unresolved *internal*
+    one is an edge missing from the graph, and a missing edge is how a live symbol lands on
+    the dead list — so this is the trust metric for `unused`. Gate CI on `--strict` (exit 3)
+    before gating on `--fail-on unused`. Unresolved *external* specifiers (an npm package
+    that is not installed) are counted separately and are harmless
+  - `stats`: package→package matrix with symbol counts, Ca/Ce coupling, instability
+  - `cycles`: file-level and project-level (Tarjan SCC)
+  - `move-candidates`: symbols used exclusively by one other project
+  - `boundaries`: NX tag rules from `nx-analyzer.json`
+- **Reporting**
+  - JSON (deterministic), **Mermaid**/DOT graph export, self-contained **HTML report**
+    (interactive project graph + tables), **SARIF 2.1.0** (GitHub code scanning)
+  - `--baseline` (report only new findings) and `--fail-on unused,cycles,boundaries` (exit 2)
 
-## Command Line Options
+## CLI
 
 ```bash
-USAGE:
-    angular-analysis [OPTIONS]
+nx-analyzer [OPTIONS] [COMMAND]
 
-OPTIONS:
-    -d, --project-path <PATH>     Path to the project directory [default: .]
-    -o, --output-file <PATH>      Output file for analysis results [default: angular-analysis.json]
-    -v, --verbose                 Enable verbose output
-    -p, --projects <PROJECTS>     Filter specific projects (comma-separated)
-    -n, --exclude-node-modules    Exclude node_modules [default: true]
-    -t, --typescript-only         Filter TypeScript files only [default: true]
+COMMANDS:
+    analyze            Full analysis, JSON report (default) [-o file.json]
+    stats              Package statistics and dependency matrix [--project X]
+    unused             Dead code report [--project X] [--kind component,service,...]
+    usages <SYMBOL>    Where and how a symbol is used: imports, templates, JSX,
+                       lazy loads, counts per project [--from X] [--json]
+    cycles             File and project dependency cycles
+    move-candidates    Symbols worth moving to their only consumer [--project X]
+    boundaries         NX tag boundary violations
+    graph              Export graph: --format mermaid|dot|json --level project|file
+    html               Self-contained HTML report [-o report.html]
+    sarif              SARIF output [-o results.sarif]
+    baseline           Write current findings as a baseline [-o baseline.json]
+
+OPTIONS (global):
+    -d, --project-path <PATH>            Workspace directory [default: .]
+    -v, --verbose                        Verbose output
+    -p, --projects <PROJECTS>            Filter projects (comma-separated)
+    -n, --exclude-node-modules <BOOL>    [default: true]
+    -t, --typescript-only <BOOL>         .ts/.tsx only; false adds .js/.jsx/.mjs/.cjs [default: true]
+        --baseline <FILE>                Report/fail only on findings not in the baseline
+        --fail-on <CATEGORIES>           unused, cycles, boundaries, all → exit code 2
+        --strict                         Exit 3 if any import inside the workspace fails to
+                                         resolve — the graph is then incomplete and the
+                                         dead-code findings cannot be trusted
+```
+
+### Examples
+
+```bash
+# Full report
+nx-analyzer -d /path/to/workspace analyze -o report.json
+
+# Dead code, failing CI only on NEW findings.
+# --strict first: an incomplete graph invalidates every finding below it.
+nx-analyzer -d . baseline -o .nx-analyzer-baseline.json     # once, commit the file
+nx-analyzer -d . --strict unused --baseline .nx-analyzer-baseline.json --fail-on unused
+
+# Who uses this component, from where and how?
+nx-analyzer -d . usages UiButtonComponent
+nx-analyzer -d . usages formatPrice --from feature-checkout --json
+
+# Dead components only, in one project
+nx-analyzer -d . unused --kind component --project shared-ui
+
+# Project graph for a PR description (renders on GitHub)
+nx-analyzer -d . graph --format mermaid
+
+# Interactive report
+nx-analyzer -d . html -o report.html
+```
+
+### Boundary rules (`nx-analyzer.json` at the workspace root)
+
+```json
+{
+  "boundaries": [
+    { "sourceTag": "type:ui", "allowedTags": ["type:ui", "type:util"] },
+    { "sourceTag": "scope:shop", "allowedTags": ["scope:shop", "scope:shared"] }
+  ]
+}
 ```
 
 ## Project Structure
 
 ```
 src/
-├── analysis/           # Core analysis functionality
-├── ng/                # Angular-specific analysis
-└──  nx/                # NX workspace handling
+├── analysis/           # Core: processors, resolvers, import graph, file facts
+├── analyses/           # Derived analyses: stats, unused, cycles, moves, boundaries, react
+├── ng/                 # Angular: visitors, decorator analyzers, template scanner
+├── nx/                 # NX workspace handling (project.json, tsconfig chains)
+└── report/             # Outputs: terminal, mermaid/dot, HTML, SARIF, baseline
+tests/
+├── fixtures/           # 13 miniature NX workspaces (F01–F15)
+└── fixtures_test.rs    # 39 integration tests + insta snapshots
+docs/
+├── PRD.md                    # Product requirements
+├── IMPLEMENTATION_PLAN.md    # Roadmap M0–M7 with delivery status
+├── FIXTURES.md               # Fixture specification
+└── COMPETITIVE_ANALYSIS.md   # Market survey and direction rationale
 ```
 
-## Needed Core Enhancements (under development)
+## Documentation
 
-1. **Template Analysis**
-    - Parse Angular HTML templates
-    - Track component references in templates
-
-
-2. **Dependency Usage Analysis**
-    - Track internal library usage within NX workspace
-    - Analyze external dependency usage
-    - Generate dependency usage reports
-    - Detect unused dependencies
-
-
-3. **Test Coverage**
-    - Unit tests for core functionality (asap)
-    - Integration tests for file processing
-    - Test fixtures for different Angular patterns
-    - Performance benchmarking tests
-
-## Usage Example
-
-### Installation
+Full documentation lives in [`docs-site/`](docs-site/) ([mdBook](https://rust-lang.github.io/mdBook/)) and is deployed to GitHub Pages by the `Docs` workflow on every push to `main` (enable Pages → "GitHub Actions" in the repo settings).
 
 ```bash
-# Clone the repository
-git clone [repository-url]
-
-# Build the project
-cargo build --release
-
-# Run the analysis
-./target/release/ng-analyzer -d /path/to/nx/workspace -v
+brew install mdbook            # or: cargo install mdbook
+mdbook serve docs-site --open  # local preview with live reload
 ```
 
-### Example Output
+Contents: getting started, full CLI reference, semantics of every analysis (unused categories and their guarantees, coupling metrics, boundary rules), Angular/React/plain-TS coverage, CI recipes with baseline workflow, architecture and fixture guide.
+
+## Development
+
 ```bash
-🔍 Loading NX Workspace configuration...
-📦 Project api-layer has been processed
-📦 Project course-catalog-feature has been processed
-📦 Project employee-list-feature has been processed
-📦 Project course-details-feature has been processed
-📦 Project course-details-data-access has been processed
-📦 Project shared-ui has been processed
-📦 Project ddd-hrm has been processed
-📦 Project course-model-shared has been processed
-📦 Project course-catalog-data-access has been processed
-📦 Project course-shared has been processed
-📦 Project employee-list-data-access has been processed
-📦 Project employee-profile-data-access has been processed
-📦 Project logger has been processed
-📦 Project employee-profile-feature has been processed
-📦 Project employee-model-shared has been processed
-🔍 Analyzing Angular project...
-
-
-📊 Analysis Results:
-  - CourseCatalogFeatureComponent (src/lib/course-catalog-feature/course-catalog-feature.component.ts)
-    Selector: ddd-hrm-course-catalog-feature
-    Package: course-catalog-feature
-    Template: ./course-catalog-feature.component.html
-  - EmploymentListFeatureComponent (src/lib/employment-list-feature/employment-list-feature.component.ts)
-    Selector: ddd-hrm-employment-list-feature
-    Package: employee-list-feature
-    Template: ./employment-list-feature.component.html
-  - CourseDetailsFeatureComponent (src/lib/course-details-feature/course-details-feature.component.ts)
-    Selector: ddd-hrm-course-details-feature
-    Package: course-details-feature
-    Template: ./course-details-feature.component.html
-  - CardComponent (src/lib/card/card.component.ts)
-    Selector: ddd-hrm-card
-    Package: shared-ui
-    Template: ./card.component.html
-    Imports:
-      - ImportedItem { name: "BadgeComponent", alias: None, import_kind: Named } from ../badge/badge.component [resolved: ../ddd-hrm/libs/shared/ui/src/lib/badge/badge.component.ts]
-  - CardFieldComponent (src/lib/card-field/card-field.component.ts)
-    Selector: ddd-hrm-card-field
-    Package: shared-ui
-    Template: ./card-field.component.html
-  - BadgeComponent (src/lib/badge/badge.component.ts)
-    Selector: ddd-hrm-badge
-    Package: shared-ui
-    Template: ./badge.component.html
-  - AppComponent (src/app/app.component.ts)
-    Selector: ddd-hrm-root
-    Package: ddd-hrm
-    Template: ./app.component.html
-  - SelectEmployeeForLearningComponent (src/lib/select-employee-for-learning/select-employee-for-learning.component.ts)
-    Selector: ddd-hrm-select-employee-for-learning
-    Package: course-shared
-    Template: ./select-employee-for-learning.component.html
-  - EmployeeProfileFeatureComponent (src/lib/employee-profile-feature/employee-profile-feature.component.ts)
-    Selector: ddd-hrm-employee-profile-feature
-    Package: employee-profile-feature
-    Template: ./employee-profile-feature.component.html
-  - CourseDetailsApiService (src/lib/course-details-api.service.ts)
-    Package: course-details-data-access
-    Imports:
-      - ImportedItem { name: "CourseDetails", alias: None, import_kind: Named } from ./course-details.model [resolved: ../ddd-hrm/libs/learning-management/course-details-data-access/src/lib/course-details.model.ts]
-      - ImportedItem { name: "EmployeeAssignmentForCourse", alias: None, import_kind: Named } from ./course-details.model [resolved: ../ddd-hrm/libs/learning-management/course-details-data-access/src/lib/course-details.model.ts]
-  - CourseCatalogApiService (src/lib/course-catalog-api.service.ts)
-    Package: course-catalog-data-access
-    Imports:
-      - ImportedItem { name: "CourseListItem", alias: None, import_kind: Named } from ./course-catalog.model [resolved: ../ddd-hrm/libs/learning-management/course-catalog-data-access/src/lib/course-catalog.model.ts]
-  - EmployeeListApiService (src/lib/employee-list-api.service.ts)
-    Package: employee-list-data-access
-  - EmployeeProfileApiService (src/lib/services/employee-profile-api.service.ts)
-    Package: employee-profile-data-access
-    Imports:
-      - ImportedItem { name: "CourseAssignmentForEmployee", alias: None, import_kind: Named } from ../models/employee-profile.model [resolved: ../ddd-hrm/libs/employee-management/employee-profile-data-access/src/lib/models/employee-profile.model.ts]
-      - ImportedItem { name: "EmployeeDetails", alias: None, import_kind: Named } from ../models/employee-profile.model [resolved: ../ddd-hrm/libs/employee-management/employee-profile-data-access/src/lib/models/employee-profile.model.ts]
-  - LoggerService (src/lib/logger.service.ts)
-    Package: logger
-Components found: 9
-
-Services found: 5
-
-Modules found: 0
-
-Directives found: 0
-
-Pipes found: 0
-
-⏱️ Timing Analysis:
-Workspace load time: 56.165666ms
-Total analysis time: 0ns
-Total execution time: 68.205709ms
-15 projects have been processed
-
+cargo test          # unit + integration tests (fixtures under tests/fixtures)
+cargo clippy --all-targets -- -D warnings
+cargo fmt --check
 ```
+
+Snapshot tests use [insta](https://insta.rs). After an intentional output change, refresh with `INSTA_UPDATE=always cargo test` and review the diff.
+
+## Roadmap
+
+Delivered: M0 (correctness + tests), M1 (symbol graph), M2 (Angular semantics), M3 (analyses), M4 (reporting), M6-lite (React basics). Planned next (see `docs/IMPLEMENTATION_PLAN.md`): M5 incremental cache/watch/git hotspots, M7 MCP server + Angular input analytics.
 
 ## Contributing
 
-Please wait yet for more stable version. Project is in early development stage and the directions are not established.
-Project is live only for educational purposes.
+Project is in active development; issues and PRs welcome once the repository is public.
 
 ## License
 

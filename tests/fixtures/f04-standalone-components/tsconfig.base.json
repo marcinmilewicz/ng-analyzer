@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@fix/widgets": ["libs/widgets/src/index.ts"] }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/edge": ["libs/edge/src/index.ts"],
+      "@fix/effects": ["libs/effects/src/index.ts"]
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{ "name": "feature-admin", "sourceRoot": "libs/feature-admin/src", "projectType": "library", "tags": ["type:feature", "scope:admin"] }

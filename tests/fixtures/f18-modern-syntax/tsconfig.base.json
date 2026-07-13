@@ -1,0 +1,9 @@
+{
+  // JSONC: real tsconfigs are full of comments and trailing commas
+  "compilerOptions": {
+    "baseUrl": ".", /* block comment */
+    "paths": {
+      "@fix/modern": ["libs/modern/src/index.ts"], // trailing comma below
+    },
+  },
+}

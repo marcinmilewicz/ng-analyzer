@@ -1,0 +1,268 @@
+---
+source: tests/fixtures_test.rs
+expression: report
+---
+{
+  "analysis": {
+    "boundary_violations": [],
+    "move_candidates": [],
+    "resolution": {
+      "resolved_imports": 4,
+      "unresolved_external": [],
+      "unresolved_internal": []
+    },
+    "stats": {
+      "dependencies": [
+        {
+          "count": 1,
+          "from": "edge",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "*"
+            }
+          ],
+          "to": "effects"
+        }
+      ],
+      "project_cycles": [],
+      "projects": [
+        {
+          "afferent": 0,
+          "efferent": 1,
+          "exports": 6,
+          "files": 6,
+          "instability": 1.0,
+          "name": "edge",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 1,
+          "efferent": 0,
+          "exports": 0,
+          "files": 1,
+          "instability": 0.0,
+          "name": "effects",
+          "project_type": "library",
+          "tags": []
+        }
+      ]
+    },
+    "unused": {
+      "declared_not_rendered": [],
+      "export_only": [],
+      "orphan_files": [
+        "tests/fixtures/f22-dead-imports/libs/edge/src/lib/alive.ts",
+        "tests/fixtures/f22-dead-imports/libs/edge/src/lib/typed.ts",
+        "tests/fixtures/f22-dead-imports/libs/edge/src/lib/zombie.ts"
+      ],
+      "test_only_exports": [],
+      "unused_exports": [
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/alive.ts",
+          "kind": "Function",
+          "name": "alive",
+          "project": "edge"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/ghost.ts",
+          "kind": "Function",
+          "name": "ghost",
+          "project": "edge"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/typed.ts",
+          "kind": "Function",
+          "name": "area",
+          "project": "edge"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/zombie.ts",
+          "kind": "Function",
+          "name": "zombie",
+          "project": "edge"
+        }
+      ],
+      "unused_imports": [
+        {
+          "file": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/zombie.ts",
+          "name": "ghost",
+          "project": "edge",
+          "specifier": "./ghost"
+        }
+      ]
+    }
+  },
+  "components": [],
+  "directives": [],
+  "import_graph": {
+    "circular_dependencies": [],
+    "edges": [
+      {
+        "from": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/alive.ts",
+        "to": [
+          "tests/fixtures/f22-dead-imports/libs/edge/src/lib/helper.ts",
+          "tests/fixtures/f22-dead-imports/libs/effects/src/index.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/typed.ts",
+        "to": [
+          "tests/fixtures/f22-dead-imports/libs/edge/src/lib/shape.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/zombie.ts",
+        "to": [
+          "tests/fixtures/f22-dead-imports/libs/edge/src/lib/ghost.ts"
+        ]
+      }
+    ]
+  },
+  "modules": [],
+  "pipes": [],
+  "react_components": [],
+  "services": [],
+  "source_files": [
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "alive"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "SideEffect",
+            "name": ""
+          },
+          "resolved_path": "tests/fixtures/f22-dead-imports/libs/effects/src/index.ts",
+          "source": "@fix/effects"
+        },
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "helper"
+          },
+          "resolved_path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/helper.ts",
+          "source": "./helper"
+        }
+      ],
+      "package_name": "edge",
+      "path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/alive.ts",
+      "used_import_names": [
+        "helper"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "ghost"
+        }
+      ],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/ghost.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "helper"
+        }
+      ],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/helper.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Interface",
+          "name": "Shape"
+        }
+      ],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/shape.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "area"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "Shape"
+          },
+          "resolved_path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/shape.ts",
+          "source": "./shape"
+        }
+      ],
+      "package_name": "edge",
+      "path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/typed.ts",
+      "used_import_names": [
+        "Shape"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "zombie"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "ghost"
+          },
+          "resolved_path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/ghost.ts",
+          "source": "./ghost"
+        }
+      ],
+      "package_name": "edge",
+      "path": "tests/fixtures/f22-dead-imports/libs/edge/src/lib/zombie.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [],
+      "imports": [],
+      "package_name": "effects",
+      "path": "tests/fixtures/f22-dead-imports/libs/effects/src/index.ts",
+      "used_import_names": []
+    }
+  ],
+  "template_usages": []
+}

@@ -1,0 +1,331 @@
+---
+source: tests/fixtures_test.rs
+expression: report
+---
+{
+  "analysis": {
+    "boundary_violations": [],
+    "move_candidates": [],
+    "resolution": {
+      "resolved_imports": 3,
+      "unresolved_external": [
+        {
+          "files": 4,
+          "specifier": "@angular/core"
+        }
+      ],
+      "unresolved_internal": []
+    },
+    "stats": {
+      "dependencies": [],
+      "project_cycles": [],
+      "projects": [
+        {
+          "afferent": 0,
+          "efferent": 0,
+          "exports": 6,
+          "files": 7,
+          "instability": 0.0,
+          "name": "edge",
+          "project_type": "library",
+          "tags": []
+        }
+      ]
+    },
+    "unused": {
+      "declared_not_rendered": [],
+      "export_only": [],
+      "orphan_files": [
+        "tests/fixtures/f12-edge-cases/libs/edge/src/lib/default-export.component.ts",
+        "tests/fixtures/f12-edge-cases/libs/edge/src/lib/export-assignment.ts",
+        "tests/fixtures/f12-edge-cases/libs/edge/src/lib/import-variants.service.ts",
+        "tests/fixtures/f12-edge-cases/libs/edge/src/lib/internal.service.ts",
+        "tests/fixtures/f12-edge-cases/libs/edge/src/lib/later-exported.directive.ts"
+      ],
+      "test_only_exports": [],
+      "unused_exports": [
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/default-export.component.ts",
+          "kind": "Component",
+          "name": "DefaultExportComponent",
+          "project": "edge"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/import-variants.service.ts",
+          "kind": "Service",
+          "name": "ImportVariantsService",
+          "project": "edge"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/internal.service.ts",
+          "kind": "Function",
+          "name": "makeInternal",
+          "project": "edge"
+        }
+      ],
+      "unused_imports": []
+    }
+  },
+  "components": [
+    {
+      "imports": [],
+      "inputs": [],
+      "name": "DefaultExportComponent",
+      "outputs": [],
+      "package_name": "edge",
+      "providers": [],
+      "relative_path": "src/lib/default-export.component.ts",
+      "selector": "fix-default-export",
+      "source_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/default-export.component.ts",
+      "standalone": true,
+      "standalone_imports": [],
+      "style_paths": [],
+      "template_inline": null,
+      "template_path": "./default-export.component.html"
+    }
+  ],
+  "directives": [
+    {
+      "host_bindings": [],
+      "host_listeners": [],
+      "imports": [],
+      "inputs": [],
+      "name": "LaterExportedDirective",
+      "outputs": [],
+      "package_name": "edge",
+      "relative_path": "src/lib/later-exported.directive.ts",
+      "selector": "[fixLaterExported]",
+      "source_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/later-exported.directive.ts",
+      "standalone": true
+    }
+  ],
+  "import_graph": {
+    "circular_dependencies": [],
+    "edges": [
+      {
+        "from": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/import-variants.service.ts",
+        "to": [
+          "tests/fixtures/f12-edge-cases/libs/edge/src/lib/helpers.ts",
+          "tests/fixtures/f12-edge-cases/libs/edge/src/lib/polyfill.ts"
+        ]
+      }
+    ]
+  },
+  "modules": [],
+  "pipes": [],
+  "react_components": [],
+  "services": [
+    {
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": "helperOne",
+            "import_kind": "Named",
+            "name": "one"
+          },
+          "resolved_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/helpers.ts",
+          "source": "./helpers"
+        },
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Namespace",
+            "name": "helpers"
+          },
+          "resolved_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/helpers.ts",
+          "source": "./helpers"
+        },
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "SideEffect",
+            "name": ""
+          },
+          "resolved_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/polyfill.ts",
+          "source": "./polyfill"
+        }
+      ],
+      "name": "ImportVariantsService",
+      "package_name": "edge",
+      "provided_in": "root",
+      "relative_path": "src/lib/import-variants.service.ts",
+      "source_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/import-variants.service.ts"
+    },
+    {
+      "imports": [],
+      "name": "InternalService",
+      "package_name": "edge",
+      "provided_in": "root",
+      "relative_path": "src/lib/internal.service.ts",
+      "source_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/internal.service.ts"
+    }
+  ],
+  "source_files": [
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Default",
+          "name": "DefaultExportComponent"
+        }
+      ],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/default-export.component.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [],
+      "imports": [],
+      "local_references": [
+        {
+          "from": "",
+          "to": [
+            "legacyValue"
+          ]
+        }
+      ],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/export-assignment.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "helperOne"
+        },
+        {
+          "kind": "Function",
+          "name": "helperTwo"
+        }
+      ],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/helpers.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "ImportVariantsService"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": "helperOne",
+            "import_kind": "Named",
+            "name": "one"
+          },
+          "resolved_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/helpers.ts",
+          "source": "./helpers"
+        },
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Namespace",
+            "name": "helpers"
+          },
+          "resolved_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/helpers.ts",
+          "source": "./helpers"
+        },
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "SideEffect",
+            "name": ""
+          },
+          "resolved_path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/polyfill.ts",
+          "source": "./polyfill"
+        }
+      ],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/import-variants.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "helpers",
+        "one"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "makeInternal"
+        }
+      ],
+      "imports": [],
+      "local_references": [
+        {
+          "from": "makeInternal",
+          "to": [
+            "InternalService"
+          ]
+        }
+      ],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/internal.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "ReExport",
+          "name": "LaterExportedDirective"
+        }
+      ],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/later-exported.directive.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [],
+      "imports": [],
+      "package_name": "edge",
+      "path": "tests/fixtures/f12-edge-cases/libs/edge/src/lib/polyfill.ts",
+      "used_import_names": []
+    }
+  ],
+  "template_usages": []
+}

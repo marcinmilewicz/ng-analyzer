@@ -1,0 +1,425 @@
+---
+source: tests/fixtures_test.rs
+expression: report
+---
+{
+  "analysis": {
+    "boundary_violations": [],
+    "move_candidates": [
+      {
+        "external_usages": 1,
+        "file": "tests/fixtures/f03-tsconfig-paths/libs/multi/src/lib/multi.model.ts",
+        "from_project": "multi",
+        "internal_usages": 0,
+        "symbol": "MultiExport",
+        "to_project": "consumer"
+      }
+    ],
+    "resolution": {
+      "resolved_imports": 3,
+      "unresolved_external": [
+        {
+          "files": 4,
+          "specifier": "@angular/core"
+        }
+      ],
+      "unresolved_internal": []
+    },
+    "stats": {
+      "dependencies": [
+        {
+          "count": 1,
+          "from": "consumer",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "MultiExport"
+            }
+          ],
+          "to": "multi"
+        },
+        {
+          "count": 1,
+          "from": "consumer",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "sharedHelper"
+            }
+          ],
+          "to": "shared"
+        },
+        {
+          "count": 1,
+          "from": "deep-base",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "sharedHelper"
+            }
+          ],
+          "to": "shared"
+        }
+      ],
+      "project_cycles": [],
+      "projects": [
+        {
+          "afferent": 0,
+          "efferent": 0,
+          "exports": 1,
+          "files": 1,
+          "instability": 0.0,
+          "name": "anonymous",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 0,
+          "efferent": 2,
+          "exports": 1,
+          "files": 1,
+          "instability": 1.0,
+          "name": "consumer",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 0,
+          "efferent": 1,
+          "exports": 1,
+          "files": 1,
+          "instability": 1.0,
+          "name": "deep-base",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 1,
+          "efferent": 0,
+          "exports": 2,
+          "files": 2,
+          "instability": 0.0,
+          "name": "multi",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 0,
+          "efferent": 0,
+          "exports": 1,
+          "files": 1,
+          "instability": 0.0,
+          "name": "no-tsconfig",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 2,
+          "efferent": 0,
+          "exports": 1,
+          "files": 1,
+          "instability": 0.0,
+          "name": "shared",
+          "project_type": "library",
+          "tags": []
+        }
+      ]
+    },
+    "unused": {
+      "declared_not_rendered": [],
+      "export_only": [],
+      "orphan_files": [
+        "tests/fixtures/f03-tsconfig-paths/libs/anonymous/src/lib/anonymous.service.ts",
+        "tests/fixtures/f03-tsconfig-paths/libs/consumer/src/lib/consumer.service.ts",
+        "tests/fixtures/f03-tsconfig-paths/libs/deep-base/src/lib/deep-base.service.ts",
+        "tests/fixtures/f03-tsconfig-paths/libs/no-tsconfig/src/lib/orphan-config.service.ts"
+      ],
+      "test_only_exports": [],
+      "unused_exports": [
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f03-tsconfig-paths/libs/anonymous/src/lib/anonymous.service.ts",
+          "kind": "Service",
+          "name": "AnonymousService",
+          "project": "anonymous"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f03-tsconfig-paths/libs/consumer/src/lib/consumer.service.ts",
+          "kind": "Service",
+          "name": "ConsumerService",
+          "project": "consumer"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f03-tsconfig-paths/libs/deep-base/src/lib/deep-base.service.ts",
+          "kind": "Service",
+          "name": "DeepBaseService",
+          "project": "deep-base"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f03-tsconfig-paths/libs/no-tsconfig/src/lib/orphan-config.service.ts",
+          "kind": "Service",
+          "name": "OrphanConfigService",
+          "project": "no-tsconfig"
+        }
+      ],
+      "unused_imports": []
+    }
+  },
+  "components": [],
+  "directives": [],
+  "import_graph": {
+    "circular_dependencies": [],
+    "edges": [
+      {
+        "from": "tests/fixtures/f03-tsconfig-paths/libs/consumer/src/lib/consumer.service.ts",
+        "to": [
+          "tests/fixtures/f03-tsconfig-paths/libs/multi/src/lib/multi.model.ts",
+          "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f03-tsconfig-paths/libs/deep-base/src/lib/deep-base.service.ts",
+        "to": [
+          "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f03-tsconfig-paths/libs/multi/src/index.ts",
+        "to": [
+          "tests/fixtures/f03-tsconfig-paths/libs/multi/src/lib/multi.model.ts"
+        ]
+      }
+    ]
+  },
+  "modules": [],
+  "pipes": [],
+  "react_components": [],
+  "services": [
+    {
+      "imports": [],
+      "name": "AnonymousService",
+      "package_name": "anonymous",
+      "provided_in": "root",
+      "relative_path": "src/lib/anonymous.service.ts",
+      "source_path": "tests/fixtures/f03-tsconfig-paths/libs/anonymous/src/lib/anonymous.service.ts"
+    },
+    {
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "sharedHelper"
+          },
+          "resolved_path": "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts",
+          "source": "shared/helper"
+        },
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "MultiExport"
+          },
+          "resolved_path": "tests/fixtures/f03-tsconfig-paths/libs/multi/src/lib/multi.model.ts",
+          "source": "@fix/multi"
+        }
+      ],
+      "name": "ConsumerService",
+      "package_name": "consumer",
+      "provided_in": "root",
+      "relative_path": "src/lib/consumer.service.ts",
+      "source_path": "tests/fixtures/f03-tsconfig-paths/libs/consumer/src/lib/consumer.service.ts"
+    },
+    {
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "sharedHelper"
+          },
+          "resolved_path": "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts",
+          "source": "shared/helper"
+        }
+      ],
+      "name": "DeepBaseService",
+      "package_name": "deep-base",
+      "provided_in": "root",
+      "relative_path": "src/lib/deep-base.service.ts",
+      "source_path": "tests/fixtures/f03-tsconfig-paths/libs/deep-base/src/lib/deep-base.service.ts"
+    },
+    {
+      "imports": [],
+      "name": "OrphanConfigService",
+      "package_name": "no-tsconfig",
+      "provided_in": "root",
+      "relative_path": "src/lib/orphan-config.service.ts",
+      "source_path": "tests/fixtures/f03-tsconfig-paths/libs/no-tsconfig/src/lib/orphan-config.service.ts"
+    }
+  ],
+  "source_files": [
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "AnonymousService"
+        }
+      ],
+      "imports": [],
+      "package_name": "anonymous",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/anonymous/src/lib/anonymous.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "ConsumerService"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "sharedHelper"
+          },
+          "resolved_path": "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts",
+          "source": "shared/helper"
+        },
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "MultiExport"
+          },
+          "resolved_path": "tests/fixtures/f03-tsconfig-paths/libs/multi/src/lib/multi.model.ts",
+          "source": "@fix/multi"
+        }
+      ],
+      "package_name": "consumer",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/consumer/src/lib/consumer.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "MultiExport",
+        "sharedHelper"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "DeepBaseService"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "sharedHelper"
+          },
+          "resolved_path": "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts",
+          "source": "shared/helper"
+        }
+      ],
+      "package_name": "deep-base",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/deep-base/src/lib/deep-base.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "sharedHelper"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "./lib/multi.model",
+          "kind": "ReExportAll",
+          "name": "* from ./lib/multi.model"
+        }
+      ],
+      "imports": [],
+      "package_name": "multi",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/multi/src/index.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Interface",
+          "name": "MultiExport"
+        }
+      ],
+      "imports": [],
+      "package_name": "multi",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/multi/src/lib/multi.model.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "OrphanConfigService"
+        }
+      ],
+      "imports": [],
+      "package_name": "no-tsconfig",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/no-tsconfig/src/lib/orphan-config.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "sharedHelper"
+        }
+      ],
+      "imports": [],
+      "package_name": "shared",
+      "path": "tests/fixtures/f03-tsconfig-paths/libs/shared/src/lib/helper.ts",
+      "used_import_names": []
+    }
+  ],
+  "template_usages": []
+}

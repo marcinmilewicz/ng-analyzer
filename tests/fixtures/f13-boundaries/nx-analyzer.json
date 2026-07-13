@@ -1,0 +1,6 @@
+{
+  "boundaries": [
+    { "sourceTag": "type:ui", "allowedTags": ["type:ui", "type:util"] },
+    { "sourceTag": "scope:shop", "allowedTags": ["scope:shop", "scope:shared"] }
+  ]
+}

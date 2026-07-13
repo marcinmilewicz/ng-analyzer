@@ -1,0 +1,1 @@
+{ "name": "feature-a", "sourceRoot": "libs/feature-a/src", "projectType": "library", "tags": ["type:feature"] }

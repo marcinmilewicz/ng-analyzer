@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/parent": ["libs/parent/src/index.ts"],
+      "@fix/nested": ["libs/parent/nested/src/index.ts"]
+    }
+  }
+}

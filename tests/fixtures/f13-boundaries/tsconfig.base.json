@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/ui-kit": ["libs/ui-kit/src/index.ts"],
+      "@fix/feature-shop": ["libs/feature-shop/src/index.ts"],
+      "@fix/feature-admin": ["libs/feature-admin/src/index.ts"],
+      "@fix/util-lib": ["libs/util-lib/src/index.ts"]
+    }
+  }
+}

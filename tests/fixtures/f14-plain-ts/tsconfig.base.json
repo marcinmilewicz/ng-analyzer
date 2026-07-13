@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@fix/toolbox": ["libs/toolbox/src/index.ts"] }
+  }
+}

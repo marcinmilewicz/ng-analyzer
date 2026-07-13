@@ -1,4 +1,5 @@
+pub mod analyzers;
 pub mod models;
-pub mod visitors;
 pub mod ng_reporter;
-mod analyzers;
+pub mod templates;
+pub mod visitors;

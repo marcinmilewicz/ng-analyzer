@@ -1,0 +1,4 @@
+{
+  // comment in project tsconfig too
+  "extends": "../../tsconfig.base.json",
+}

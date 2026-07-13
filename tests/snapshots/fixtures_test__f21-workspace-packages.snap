@@ -1,0 +1,350 @@
+---
+source: tests/fixtures_test.rs
+expression: report
+---
+{
+  "analysis": {
+    "boundary_violations": [],
+    "move_candidates": [
+      {
+        "external_usages": 1,
+        "file": "tests/fixtures/f21-workspace-packages/libs/models/src/lib/rect.ts",
+        "from_project": "models",
+        "internal_usages": 0,
+        "symbol": "Rect",
+        "to_project": "consumer"
+      },
+      {
+        "external_usages": 1,
+        "file": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+        "from_project": "wpkg",
+        "internal_usages": 0,
+        "symbol": "DefaultWidget",
+        "to_project": "consumer"
+      },
+      {
+        "external_usages": 1,
+        "file": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/widget.ts",
+        "from_project": "wpkg",
+        "internal_usages": 0,
+        "symbol": "widgetThing",
+        "to_project": "consumer"
+      }
+    ],
+    "react_usage": [
+      {
+        "component": "Consumer",
+        "file": "tests/fixtures/f21-workspace-packages/libs/consumer/src/lib/consumer.tsx",
+        "package_name": "consumer",
+        "props": [],
+        "usage_count": 0
+      },
+      {
+        "component": "DefaultWidget",
+        "file": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+        "package_name": "wpkg",
+        "props": [
+          {
+            "count": 1,
+            "name": "key"
+          }
+        ],
+        "usage_count": 1
+      }
+    ],
+    "resolution": {
+      "resolved_imports": 3,
+      "unresolved_external": [],
+      "unresolved_internal": []
+    },
+    "stats": {
+      "dependencies": [
+        {
+          "count": 1,
+          "from": "consumer",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "Rect"
+            }
+          ],
+          "to": "models"
+        },
+        {
+          "count": 2,
+          "from": "consumer",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "DefaultWidget"
+            },
+            {
+              "count": 1,
+              "name": "widgetThing"
+            }
+          ],
+          "to": "wpkg"
+        }
+      ],
+      "project_cycles": [],
+      "projects": [
+        {
+          "afferent": 0,
+          "efferent": 0,
+          "exports": 1,
+          "files": 1,
+          "instability": 0.0,
+          "name": "bridge",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 0,
+          "efferent": 2,
+          "exports": 1,
+          "files": 1,
+          "instability": 1.0,
+          "name": "consumer",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 1,
+          "efferent": 0,
+          "exports": 2,
+          "files": 2,
+          "instability": 0.0,
+          "name": "models",
+          "project_type": "library",
+          "tags": []
+        },
+        {
+          "afferent": 1,
+          "efferent": 0,
+          "exports": 4,
+          "files": 3,
+          "instability": 0.0,
+          "name": "wpkg",
+          "project_type": "library",
+          "tags": []
+        }
+      ]
+    },
+    "unused": {
+      "declared_not_rendered": [],
+      "export_only": [],
+      "orphan_files": [
+        "tests/fixtures/f21-workspace-packages/libs/consumer/src/lib/consumer.tsx"
+      ],
+      "test_only_exports": [],
+      "unused_exports": [
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f21-workspace-packages/libs/consumer/src/lib/consumer.tsx",
+          "kind": "ReactComponent",
+          "name": "Consumer",
+          "project": "consumer"
+        }
+      ],
+      "unused_imports": []
+    }
+  },
+  "components": [],
+  "directives": [],
+  "import_graph": {
+    "circular_dependencies": [],
+    "edges": [
+      {
+        "from": "tests/fixtures/f21-workspace-packages/libs/bridge/src/lib/bridge-types.ts",
+        "to": [
+          "tests/fixtures/f21-workspace-packages/libs/models/src/lib/rect.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f21-workspace-packages/libs/consumer/src/lib/consumer.tsx",
+        "to": [
+          "tests/fixtures/f21-workspace-packages/libs/models/src/lib/rect.ts",
+          "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+          "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/widget.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f21-workspace-packages/libs/models/src/index.ts",
+        "to": [
+          "tests/fixtures/f21-workspace-packages/libs/models/src/lib/rect.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/index.ts",
+        "to": [
+          "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+          "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/widget.ts"
+        ]
+      }
+    ]
+  },
+  "modules": [],
+  "pipes": [],
+  "react_components": [
+    {
+      "name": "Consumer",
+      "package_name": "consumer",
+      "source_path": "tests/fixtures/f21-workspace-packages/libs/consumer/src/lib/consumer.tsx",
+      "wrapped": false
+    },
+    {
+      "name": "DefaultWidget",
+      "package_name": "wpkg",
+      "source_path": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+      "wrapped": false
+    }
+  ],
+  "services": [],
+  "source_files": [
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "@fix/models",
+          "kind": "ReExport",
+          "name": "Rect"
+        }
+      ],
+      "imports": [],
+      "package_name": "bridge",
+      "path": "tests/fixtures/f21-workspace-packages/libs/bridge/src/lib/bridge-types.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "Consumer"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "NodeModule",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "widgetThing"
+          },
+          "resolved_path": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/widget.ts",
+          "source": "@fix/wpkg"
+        },
+        {
+          "import_type": "NodeModule",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "DefaultWidget"
+          },
+          "resolved_path": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+          "source": "@fix/wpkg"
+        },
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "Rect"
+          },
+          "resolved_path": "tests/fixtures/f21-workspace-packages/libs/models/src/lib/rect.ts",
+          "source": "../../../bridge/src/lib/bridge-types"
+        }
+      ],
+      "jsx_usages": [
+        {
+          "component": "DefaultWidget",
+          "props": [
+            "key"
+          ]
+        }
+      ],
+      "package_name": "consumer",
+      "path": "tests/fixtures/f21-workspace-packages/libs/consumer/src/lib/consumer.tsx",
+      "used_import_names": [
+        "DefaultWidget",
+        "Rect",
+        "widgetThing"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "./lib/rect",
+          "kind": "ReExport",
+          "name": "Rect"
+        }
+      ],
+      "imports": [],
+      "package_name": "models",
+      "path": "tests/fixtures/f21-workspace-packages/libs/models/src/index.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Interface",
+          "name": "Rect"
+        }
+      ],
+      "imports": [],
+      "package_name": "models",
+      "path": "tests/fixtures/f21-workspace-packages/libs/models/src/lib/rect.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "./lib/widget",
+          "kind": "ReExport",
+          "name": "widgetThing"
+        },
+        {
+          "from_module": "./lib/default-widget",
+          "kind": "ReExport",
+          "name": "DefaultWidget"
+        }
+      ],
+      "imports": [],
+      "package_name": "wpkg",
+      "path": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/index.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Default",
+          "name": "DefaultWidget"
+        }
+      ],
+      "imports": [],
+      "package_name": "wpkg",
+      "path": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/default-widget.tsx",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "widgetThing"
+        }
+      ],
+      "imports": [],
+      "package_name": "wpkg",
+      "path": "tests/fixtures/f21-workspace-packages/libs/wpkg/src/lib/widget.ts",
+      "used_import_names": []
+    }
+  ],
+  "template_usages": []
+}

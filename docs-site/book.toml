@@ -1,0 +1,16 @@
+[book]
+title = "nx-analyzer"
+description = "Static analyzer for TypeScript NX workspaces (Angular, React, Next.js) — dead code, package statistics, architecture checks."
+authors = ["nx-analyzer contributors"]
+language = "en"
+src = "src"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/marcinek/nx-analyzer"
+edit-url-template = "https://github.com/marcinek/nx-analyzer/edit/main/docs-site/{path}"
+
+[output.html.search]
+enable = true
+limit-results = 20

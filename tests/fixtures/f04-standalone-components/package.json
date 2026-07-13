@@ -1,0 +1,5 @@
+{
+  "name": "f04-standalone-components",
+  "version": "0.0.0",
+  "dependencies": { "@angular/core": "^19.1.0" }
+}

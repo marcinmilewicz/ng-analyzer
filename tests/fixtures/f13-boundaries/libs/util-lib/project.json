@@ -1,0 +1,1 @@
+{ "name": "util-lib", "sourceRoot": "libs/util-lib/src", "projectType": "library", "tags": ["type:util", "scope:shared"] }

@@ -1,0 +1,10 @@
+<h1>Page</h1>
+@if (show) {
+  <ui-button>Buy now</ui-button>
+}
+<p [uiTooltip]="'hint'">Hover me</p>
+<div *uiIf="show">conditional</div>
+@for (item of items; track item) {
+  <span>{{ item * price | uiCurrency }}</span>
+}
+<em *ngIf="show">legacy syntax</em>

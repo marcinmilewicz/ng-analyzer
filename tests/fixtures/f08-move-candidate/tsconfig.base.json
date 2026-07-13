@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@fix/shared-utils": ["libs/shared-utils/src/index.ts"] }
+  }
+}

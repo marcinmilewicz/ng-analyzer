@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@fix/web-ui": ["libs/web-ui/src/index.ts"] }
+  }
+}

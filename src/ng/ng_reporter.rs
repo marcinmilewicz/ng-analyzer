@@ -24,11 +24,13 @@ impl NgReporter {
     }
 
     fn print_component(component: &NgComponentInfo) {
-        println!("  - {} ({})", component.base.name, component.base.relative_path);
+        println!(
+            "  - {} ({})",
+            component.base.name, component.base.relative_path
+        );
         println!("    Selector: {}", component.selector);
         println!("    Package: {}", component.base.package_name);
         println!("    Template: {}", component.template_path);
-
 
         if !component.base.imports.is_empty() {
             println!("    Imports:");

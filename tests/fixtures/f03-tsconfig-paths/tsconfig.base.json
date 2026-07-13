@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "shared/*": ["libs/shared/src/lib/*"],
+      "@fix/multi": ["libs/does-not-exist/src/index.ts", "libs/multi/src/index.ts"]
+    }
+  }
+}

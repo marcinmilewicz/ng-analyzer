@@ -1,7 +1,5 @@
-use crate::analysis::models::import::ResolvedImport;
 use crate::ng::models::ng_base::NgBaseInfo;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NgComponentInfo {
@@ -9,30 +7,21 @@ pub struct NgComponentInfo {
     pub base: NgBaseInfo,
     pub selector: String,
     pub template_path: String,
+    /// Inline `template:` content (empty template_path when present).
+    #[serde(default)]
+    pub template_inline: Option<String>,
     pub style_paths: Vec<String>,
     pub standalone: bool,
-}
-
-impl NgComponentInfo {
-    pub fn new(
-        name: String,
-        selector: String,
-        template_path: String,
-        style_paths: Vec<String>,
-        standalone: bool,
-        imports: Vec<ResolvedImport>,
-        source_path: PathBuf,
-        relative_path: String,
-        package_name: String,
-    ) -> Self {
-        let base = NgBaseInfo::new(name, imports, source_path, relative_path, package_name);
-
-        Self {
-            base,
-            selector,
-            template_path,
-            style_paths,
-            standalone,
-        }
-    }
+    /// Identifiers from the decorator's `imports: [...]` (standalone scope).
+    #[serde(default)]
+    pub standalone_imports: Vec<String>,
+    /// Identifiers from `providers: [...]`.
+    #[serde(default)]
+    pub providers: Vec<String>,
+    /// Input names: `@Input()` properties and signal `input()`/`model()`.
+    #[serde(default)]
+    pub inputs: Vec<String>,
+    /// Output names: `@Output()` properties and signal `output()`.
+    #[serde(default)]
+    pub outputs: Vec<String>,
 }

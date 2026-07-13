@@ -9,7 +9,6 @@ pub struct TSConfig {
     pub extends: Option<String>,
 }
 
-
 impl fmt::Display for TSConfig {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "TSConfig {{")?;

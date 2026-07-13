@@ -15,12 +15,27 @@ use swc_ecma_parser::{Parser, Syntax, TsSyntax};
 
 mod visitor;
 
+/// JSX syntax for .tsx/.jsx files, plain TS otherwise.
+pub fn syntax_for(path: &Path) -> Syntax {
+    let tsx = path
+        .extension()
+        .map(|ext| ext == "tsx" || ext == "jsx")
+        .unwrap_or(false);
+    Syntax::Typescript(TsSyntax {
+        tsx,
+        decorators: true,
+        ..Default::default()
+    })
+}
+
+#[allow(clippy::too_many_arguments)]
 pub fn analyze_file(
     path: &Path,
     project_root: &Path,
     source_map: &SourceMap,
     project_name: String,
     tsconfig: TSConfig,
+    default_standalone: bool,
     import_resolver: &mut ImportResolver,
     file_reader: &CachedFileReader,
 ) -> Result<NgAnalysisResults, Box<dyn std::error::Error>> {
@@ -31,11 +46,7 @@ pub fn analyze_file(
     );
 
     let lexer = Lexer::new(
-        Syntax::Typescript(TsSyntax {
-            tsx: false,
-            decorators: true,
-            ..Default::default()
-        }),
+        syntax_for(path),
         Default::default(),
         StringInput::from(&*source_file),
         None,
@@ -49,12 +60,17 @@ pub fn analyze_file(
                 project_root,
                 project_name,
                 tsconfig.clone(),
+                default_standalone,
                 import_resolver,
             );
             module.visit_with(&mut visitor);
 
             Ok(visitor.results)
         }
-        Err(_) => Ok(NgAnalysisResults::default()),
+        Err(e) => {
+            // Keep the analysis resilient, but never swallow errors silently.
+            eprintln!("⚠️ Failed to parse {:?}: {:?}", path, e);
+            Ok(NgAnalysisResults::default())
+        }
     }
 }

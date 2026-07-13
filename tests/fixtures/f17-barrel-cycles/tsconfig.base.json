@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/alpha": ["libs/alpha/src/index.ts"],
+      "@fix/gamma": ["libs/gamma/src/index.ts"]
+    }
+  }
+}

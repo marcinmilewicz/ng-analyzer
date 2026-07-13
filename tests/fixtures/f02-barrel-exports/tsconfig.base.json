@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@fix/ui-kit": ["libs/ui-kit/src/index.ts"] }
+  }
+}

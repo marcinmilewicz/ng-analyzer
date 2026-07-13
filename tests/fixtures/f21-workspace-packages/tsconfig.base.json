@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/models": ["libs/models/src/index.ts"]
+    }
+  }
+}

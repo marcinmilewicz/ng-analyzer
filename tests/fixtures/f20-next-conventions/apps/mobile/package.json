@@ -1,0 +1,1 @@
+{ "name": "mobile", "dependencies": { "expo-router": "~4.0.0" } }

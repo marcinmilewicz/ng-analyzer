@@ -6,8 +6,19 @@ pub fn get_relative_path(file_path: &Path, project_root: &Path) -> String {
         .to_string()
 }
 
-pub fn is_node_modules(path: &Path) -> bool {
-    path.components().any(|c| c.as_os_str() == "node_modules")
+/// Directories that never contain analyzable sources: hidden dirs
+/// (`.vercel`, `.next`, `.ai`, …) and build outputs. Applied both to
+/// project discovery and file walking — a `.vercel/project.json` is Vercel
+/// config, not an NX project, and `dist/` holds compiled artifacts.
+pub fn is_ignored_dir_component(name: &std::ffi::OsStr) -> bool {
+    let Some(name) = name.to_str() else {
+        return false;
+    };
+    (name.starts_with('.') && name.len() > 1 && name != "." && name != "..")
+        || matches!(
+            name,
+            "node_modules" | "dist" | "coverage" | "storybook-static" | "tmp"
+        )
 }
 
 use std::path::{Path, PathBuf};

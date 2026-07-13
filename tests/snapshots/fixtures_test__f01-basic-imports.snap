@@ -1,0 +1,575 @@
+---
+source: tests/fixtures_test.rs
+expression: report
+---
+{
+  "analysis": {
+    "boundary_violations": [],
+    "move_candidates": [
+      {
+        "external_usages": 1,
+        "file": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+        "from_project": "ui",
+        "internal_usages": 0,
+        "symbol": "UiButtonComponent",
+        "to_project": "feature-a"
+      }
+    ],
+    "resolution": {
+      "resolved_imports": 5,
+      "unresolved_external": [
+        {
+          "files": 5,
+          "specifier": "@angular/core"
+        }
+      ],
+      "unresolved_internal": [
+        {
+          "file": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/broken-import.service.ts",
+          "project": "feature-a",
+          "specifier": "./does-not-exist"
+        }
+      ]
+    },
+    "stats": {
+      "dependencies": [
+        {
+          "count": 2,
+          "from": "feature-a",
+          "lazy": false,
+          "symbols": [
+            {
+              "count": 1,
+              "name": "ButtonConfig"
+            },
+            {
+              "count": 1,
+              "name": "UiButtonComponent"
+            }
+          ],
+          "to": "ui"
+        }
+      ],
+      "project_cycles": [],
+      "projects": [
+        {
+          "afferent": 0,
+          "efferent": 1,
+          "exports": 7,
+          "files": 7,
+          "instability": 1.0,
+          "name": "feature-a",
+          "project_type": "library",
+          "tags": [
+            "type:feature"
+          ]
+        },
+        {
+          "afferent": 1,
+          "efferent": 0,
+          "exports": 4,
+          "files": 3,
+          "instability": 0.0,
+          "name": "ui",
+          "project_type": "library",
+          "tags": [
+            "type:ui"
+          ]
+        },
+        {
+          "afferent": 0,
+          "efferent": 0,
+          "exports": 2,
+          "files": 2,
+          "instability": 0.0,
+          "name": "util",
+          "project_type": "library",
+          "tags": [
+            "type:util"
+          ]
+        }
+      ]
+    },
+    "unused": {
+      "declared_not_rendered": [],
+      "export_only": [],
+      "orphan_files": [
+        "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/broken-import.service.ts",
+        "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/customers.service.ts",
+        "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/orders.service.ts"
+      ],
+      "test_only_exports": [],
+      "unused_exports": [
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/broken-import.service.ts",
+          "kind": "Service",
+          "name": "BrokenImportService",
+          "project": "feature-a"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/customers.service.ts",
+          "kind": "Service",
+          "name": "CustomersService",
+          "project": "feature-a"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/feature-a.component.ts",
+          "kind": "Component",
+          "name": "FeatureAComponent",
+          "project": "feature-a"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/orders.service.ts",
+          "kind": "Service",
+          "name": "OrdersService",
+          "project": "feature-a"
+        },
+        {
+          "confidence": "High",
+          "file": "tests/fixtures/f01-basic-imports/libs/util/src/lib/format.ts",
+          "kind": "Function",
+          "name": "formatLabel",
+          "project": "util"
+        }
+      ],
+      "unused_imports": []
+    }
+  },
+  "components": [
+    {
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "UiButtonComponent"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+          "source": "@fix/ui"
+        },
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "ButtonConfig"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts",
+          "source": "@fix/ui"
+        }
+      ],
+      "inputs": [],
+      "name": "FeatureAComponent",
+      "outputs": [],
+      "package_name": "feature-a",
+      "providers": [],
+      "relative_path": "src/lib/feature-a.component.ts",
+      "selector": "fix-feature-a",
+      "source_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/feature-a.component.ts",
+      "standalone": true,
+      "standalone_imports": [],
+      "style_paths": [],
+      "template_inline": null,
+      "template_path": "./feature-a.component.html"
+    },
+    {
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "ButtonConfig"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts",
+          "source": "./button.model"
+        }
+      ],
+      "inputs": [],
+      "name": "UiButtonComponent",
+      "outputs": [],
+      "package_name": "ui",
+      "providers": [],
+      "relative_path": "src/lib/button.component.ts",
+      "selector": "fix-button",
+      "source_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+      "standalone": true,
+      "standalone_imports": [],
+      "style_paths": [
+        "./button.component.css"
+      ],
+      "template_inline": null,
+      "template_path": "./button.component.html"
+    }
+  ],
+  "directives": [],
+  "import_graph": {
+    "circular_dependencies": [],
+    "edges": [
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/feature-a/src/index.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/feature-a.component.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/customers.service.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/model.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/feature-a.component.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+          "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/orders.service.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/model.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/ui/src/index.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+          "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts"
+        ]
+      },
+      {
+        "from": "tests/fixtures/f01-basic-imports/libs/util/src/index.ts",
+        "to": [
+          "tests/fixtures/f01-basic-imports/libs/util/src/lib/format.ts"
+        ]
+      }
+    ]
+  },
+  "modules": [],
+  "pipes": [],
+  "react_components": [],
+  "services": [
+    {
+      "imports": [],
+      "name": "BrokenImportService",
+      "package_name": "feature-a",
+      "provided_in": "root",
+      "relative_path": "src/lib/broken-import.service.ts",
+      "source_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/broken-import.service.ts"
+    },
+    {
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "CustomerModel"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/model.ts",
+          "source": "./model"
+        }
+      ],
+      "name": "CustomersService",
+      "package_name": "feature-a",
+      "provided_in": "root",
+      "relative_path": "src/lib/customers/customers.service.ts",
+      "source_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/customers.service.ts"
+    },
+    {
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "OrderModel"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/model.ts",
+          "source": "./model"
+        }
+      ],
+      "name": "OrdersService",
+      "package_name": "feature-a",
+      "provided_in": "root",
+      "relative_path": "src/lib/orders/orders.service.ts",
+      "source_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/orders.service.ts"
+    }
+  ],
+  "source_files": [
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "./lib/feature-a.component",
+          "kind": "ReExportAll",
+          "name": "* from ./lib/feature-a.component"
+        }
+      ],
+      "imports": [],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/index.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "BrokenImportService"
+        }
+      ],
+      "imports": [],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/broken-import.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "Internal",
+          "specifier": "./does-not-exist"
+        },
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "CustomersService"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "CustomerModel"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/model.ts",
+          "source": "./model"
+        }
+      ],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/customers.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "CustomerModel"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Interface",
+          "name": "CustomerModel"
+        }
+      ],
+      "imports": [],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/customers/model.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "FeatureAComponent"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "UiButtonComponent"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+          "source": "@fix/ui"
+        },
+        {
+          "import_type": "Package",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "ButtonConfig"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts",
+          "source": "@fix/ui"
+        }
+      ],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/feature-a.component.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "ButtonConfig",
+        "UiButtonComponent"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Interface",
+          "name": "OrderModel"
+        }
+      ],
+      "imports": [],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/model.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "OrdersService"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "OrderModel"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/model.ts",
+          "source": "./model"
+        }
+      ],
+      "package_name": "feature-a",
+      "path": "tests/fixtures/f01-basic-imports/libs/feature-a/src/lib/orders/orders.service.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "OrderModel"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "./lib/button.component",
+          "kind": "ReExportAll",
+          "name": "* from ./lib/button.component"
+        },
+        {
+          "from_module": "./lib/button.model",
+          "kind": "ReExportAll",
+          "name": "* from ./lib/button.model"
+        }
+      ],
+      "imports": [],
+      "package_name": "ui",
+      "path": "tests/fixtures/f01-basic-imports/libs/ui/src/index.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Class",
+          "name": "UiButtonComponent"
+        }
+      ],
+      "imports": [
+        {
+          "import_type": "Relative",
+          "imported_item": {
+            "alias": null,
+            "import_kind": "Named",
+            "name": "ButtonConfig"
+          },
+          "resolved_path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts",
+          "source": "./button.model"
+        }
+      ],
+      "package_name": "ui",
+      "path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.component.ts",
+      "unresolved_imports": [
+        {
+          "scope": "External",
+          "specifier": "@angular/core"
+        }
+      ],
+      "used_import_names": [
+        "ButtonConfig"
+      ]
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Interface",
+          "name": "ButtonConfig"
+        }
+      ],
+      "imports": [],
+      "package_name": "ui",
+      "path": "tests/fixtures/f01-basic-imports/libs/ui/src/lib/button.model.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "from_module": "./lib/format",
+          "kind": "ReExportAll",
+          "name": "* from ./lib/format"
+        }
+      ],
+      "imports": [],
+      "package_name": "util",
+      "path": "tests/fixtures/f01-basic-imports/libs/util/src/index.ts",
+      "used_import_names": []
+    },
+    {
+      "dynamic_imports": [],
+      "exports": [
+        {
+          "kind": "Function",
+          "name": "formatLabel"
+        }
+      ],
+      "imports": [],
+      "package_name": "util",
+      "path": "tests/fixtures/f01-basic-imports/libs/util/src/lib/format.ts",
+      "used_import_names": []
+    }
+  ],
+  "template_usages": []
+}

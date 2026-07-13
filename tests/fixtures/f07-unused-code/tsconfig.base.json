@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@fix/stuff": ["libs/stuff/src/index.ts"] }
+  }
+}

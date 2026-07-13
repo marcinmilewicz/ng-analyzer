@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/feature-x": ["libs/feature-x/src/index.ts"],
+      "@fix/feature-y": ["libs/feature-y/src/index.ts"]
+    }
+  }
+}

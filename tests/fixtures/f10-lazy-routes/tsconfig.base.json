@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fix/feature-lazy": ["libs/feature-lazy/src/index.ts"],
+      "@fix/feature-page": ["libs/feature-page/src/index.ts"]
+    }
+  }
+}

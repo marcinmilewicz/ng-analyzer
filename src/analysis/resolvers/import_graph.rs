@@ -1,11 +1,27 @@
 use dashmap::DashMap;
-use std::collections::HashSet;
-use std::path::PathBuf;
+use petgraph::algo::tarjan_scc;
+use petgraph::graph::{DiGraph, NodeIndex};
+use serde::Serialize;
+use std::collections::{HashMap, HashSet};
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 pub struct ImportGraph {
     dependencies: Arc<DashMap<PathBuf, HashSet<PathBuf>>>,
     reverse_dependencies: Arc<DashMap<PathBuf, HashSet<PathBuf>>>,
+}
+
+/// Serializable snapshot of the graph, sorted for deterministic output.
+#[derive(Debug, Serialize)]
+pub struct ImportGraphSnapshot {
+    pub edges: Vec<ImportGraphEdge>,
+    pub circular_dependencies: Vec<Vec<PathBuf>>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ImportGraphEdge {
+    pub from: PathBuf,
+    pub to: Vec<PathBuf>,
 }
 
 impl ImportGraph {
@@ -17,34 +33,31 @@ impl ImportGraph {
     }
 
     pub fn add_dependency(&self, source: PathBuf, target: PathBuf) {
-        if let Some(mut set) = self.dependencies.get_mut(&source) {
-            set.insert(target.clone());
-        } else {
-            let mut set = HashSet::new();
-            set.insert(target.clone());
-            self.dependencies.insert(source.clone(), set);
-        }
+        self.dependencies
+            .entry(source.clone())
+            .or_default()
+            .insert(target.clone());
 
-        if let Some(mut set) = self.reverse_dependencies.get_mut(&target) {
-            set.insert(source);
-        } else {
-            let mut set = HashSet::new();
-            set.insert(source);
-            self.reverse_dependencies.insert(target, set);
-        }
+        self.reverse_dependencies
+            .entry(target)
+            .or_default()
+            .insert(source);
     }
 
-    pub fn get_dependencies(&self, file: &PathBuf) -> Option<HashSet<PathBuf>> {
+    #[allow(dead_code)] // query API for upcoming analyses (unused/stats)
+    pub fn get_dependencies(&self, file: &Path) -> Option<HashSet<PathBuf>> {
         self.dependencies.get(file).map(|deps| deps.clone())
     }
 
-    pub fn get_dependents(&self, file: &PathBuf) -> Option<HashSet<PathBuf>> {
+    #[allow(dead_code)] // query API for upcoming analyses (unused/stats)
+    pub fn get_dependents(&self, file: &Path) -> Option<HashSet<PathBuf>> {
         self.reverse_dependencies.get(file).map(|deps| deps.clone())
     }
 
-    pub fn get_all_dependencies(&self, file: &PathBuf) -> HashSet<PathBuf> {
+    #[allow(dead_code)] // query API for upcoming analyses (unused/stats)
+    pub fn get_all_dependencies(&self, file: &Path) -> HashSet<PathBuf> {
         let mut all_deps = HashSet::new();
-        let mut to_process = vec![file.clone()];
+        let mut to_process = vec![file.to_path_buf()];
 
         while let Some(current) = to_process.pop() {
             if let Some(deps) = self.get_dependencies(&current) {
@@ -59,46 +72,126 @@ impl ImportGraph {
         all_deps
     }
 
+    /// Finds circular dependencies as strongly connected components
+    /// (Tarjan, iterative — no recursion, no missed cycles).
+    /// Every returned group has at least 2 files, or is a self-loop.
     pub fn analyze_circular_dependencies(&self) -> Vec<Vec<PathBuf>> {
-        let mut circular_deps = Vec::new();
-        let mut visited = HashSet::new();
-        let mut path = Vec::new();
+        let mut graph: DiGraph<PathBuf, ()> = DiGraph::new();
+        let mut node_indices: HashMap<PathBuf, NodeIndex> = HashMap::new();
+
+        let mut node_of = |graph: &mut DiGraph<PathBuf, ()>, path: &PathBuf| -> NodeIndex {
+            if let Some(&idx) = node_indices.get(path) {
+                return idx;
+            }
+            let idx = graph.add_node(path.clone());
+            node_indices.insert(path.clone(), idx);
+            idx
+        };
 
         for entry in self.dependencies.iter() {
-            let file = entry.key();
-            if !visited.contains(file) {
-                self.find_cycles(file, &mut visited, &mut path, &mut circular_deps);
+            let from = node_of(&mut graph, entry.key());
+            for target in entry.value() {
+                let to = node_of(&mut graph, target);
+                graph.add_edge(from, to, ());
             }
         }
 
-        circular_deps
+        let mut cycles: Vec<Vec<PathBuf>> = tarjan_scc(&graph)
+            .into_iter()
+            .filter(|scc| {
+                scc.len() > 1
+                    || scc
+                        .first()
+                        .map(|&n| graph.contains_edge(n, n))
+                        .unwrap_or(false)
+            })
+            .map(|scc| {
+                let mut files: Vec<PathBuf> = scc.into_iter().map(|n| graph[n].clone()).collect();
+                files.sort();
+                files
+            })
+            .collect();
+
+        cycles.sort();
+        cycles
     }
 
-    fn find_cycles(
-        &self,
-        current: &PathBuf,
-        visited: &mut HashSet<PathBuf>,
-        path: &mut Vec<PathBuf>,
-        cycles: &mut Vec<Vec<PathBuf>>,
-    ) {
-        if path.contains(current) {
-            let cycle_start = path.iter().position(|x| x == current).unwrap();
-            cycles.push(path[cycle_start..].to_vec());
-            return;
+    /// Deterministic, serializable view of the whole graph.
+    pub fn snapshot(&self) -> ImportGraphSnapshot {
+        let mut edges: Vec<ImportGraphEdge> = self
+            .dependencies
+            .iter()
+            .map(|entry| {
+                let mut targets: Vec<PathBuf> = entry.value().iter().cloned().collect();
+                targets.sort();
+                ImportGraphEdge {
+                    from: entry.key().clone(),
+                    to: targets,
+                }
+            })
+            .collect();
+        edges.sort_by(|a, b| a.from.cmp(&b.from));
+
+        ImportGraphSnapshot {
+            edges,
+            circular_dependencies: self.analyze_circular_dependencies(),
         }
+    }
+}
 
-        if !visited.insert(current.clone()) {
-            return;
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-        path.push(current.clone());
+    fn p(s: &str) -> PathBuf {
+        PathBuf::from(s)
+    }
 
-        if let Some(deps) = self.get_dependencies(current) {
-            for dep in deps {
-                self.find_cycles(&dep, visited, path, cycles);
-            }
-        }
+    #[test]
+    fn detects_simple_cycle() {
+        let graph = ImportGraph::new();
+        graph.add_dependency(p("a"), p("b"));
+        graph.add_dependency(p("b"), p("c"));
+        graph.add_dependency(p("c"), p("a"));
 
-        path.pop();
+        let cycles = graph.analyze_circular_dependencies();
+        assert_eq!(cycles.len(), 1);
+        assert_eq!(cycles[0], vec![p("a"), p("b"), p("c")]);
+    }
+
+    #[test]
+    fn detects_cycle_through_shared_visited_node() {
+        // Two cycles sharing node "b" — the old single-visited-set DFS
+        // missed the second one.
+        let graph = ImportGraph::new();
+        graph.add_dependency(p("a"), p("b"));
+        graph.add_dependency(p("b"), p("a"));
+        graph.add_dependency(p("c"), p("b"));
+        graph.add_dependency(p("b"), p("c"));
+
+        let cycles = graph.analyze_circular_dependencies();
+        // a-b-c form one SCC (a↔b, b↔c)
+        assert_eq!(cycles.len(), 1);
+        assert_eq!(cycles[0], vec![p("a"), p("b"), p("c")]);
+    }
+
+    #[test]
+    fn no_cycles_in_dag() {
+        let graph = ImportGraph::new();
+        graph.add_dependency(p("a"), p("b"));
+        graph.add_dependency(p("b"), p("c"));
+        graph.add_dependency(p("a"), p("c"));
+
+        assert!(graph.analyze_circular_dependencies().is_empty());
+    }
+
+    #[test]
+    fn detects_self_loop() {
+        let graph = ImportGraph::new();
+        graph.add_dependency(p("a"), p("a"));
+
+        let cycles = graph.analyze_circular_dependencies();
+        assert_eq!(cycles.len(), 1);
+        assert_eq!(cycles[0], vec![p("a")]);
     }
 }
