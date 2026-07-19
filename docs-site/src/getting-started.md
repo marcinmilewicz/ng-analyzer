@@ -2,12 +2,25 @@
 
 ## Installation
 
-### From source
+### Prebuilt binaries
+
+Every [release](https://github.com/marcinmilewicz/nx-analyzer/releases) ships archives for Linux
+(x86_64, statically linked against musl), macOS (Apple Silicon and Intel) and Windows. Extract the
+archive for your platform and put `nx-analyzer` on your `PATH`. Each archive is accompanied by a
+`.sha256` checksum file.
+
+### From crates.io
 
 Requires a Rust toolchain (`rustup`):
 
 ```bash
-git clone https://github.com/marcinek/nx-analyzer
+cargo install nx-analyzer
+```
+
+### From source
+
+```bash
+git clone https://github.com/marcinmilewicz/nx-analyzer
 cd nx-analyzer
 cargo build --release
 # binary at ./target/release/nx-analyzer

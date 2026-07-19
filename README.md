@@ -1,6 +1,30 @@
-# nxAnalyzer - TypeScript NX Workspace Analysis Tool
+# nx-analyzer - TypeScript NX Workspace Analysis Tool
+
+[![CI](https://github.com/marcinmilewicz/nx-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/marcinmilewicz/nx-analyzer/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/nx-analyzer.svg)](https://crates.io/crates/nx-analyzer)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A Rust-based static analyzer for NX workspaces — Angular, React and Next.js: framework-aware semantics (Angular templates, DI and lazy routes; JSX renders; Next.js file conventions), a framework-agnostic symbol graph, dead-code detection, package statistics and architecture checks — as one fast native binary.
+
+## Installation
+
+Prebuilt binaries for Linux (x86_64, static/musl), macOS (Apple Silicon and Intel) and Windows are
+attached to every [release](https://github.com/marcinmilewicz/nx-analyzer/releases). Download the
+archive for your platform, extract it, and put `nx-analyzer` on your `PATH`.
+
+With a Rust toolchain:
+
+```bash
+cargo install nx-analyzer
+```
+
+From source:
+
+```bash
+git clone https://github.com/marcinmilewicz/nx-analyzer
+cd nx-analyzer
+cargo install --path .
+```
 
 ## Features
 

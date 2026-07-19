@@ -2,6 +2,17 @@
 name = "nx-analyzer"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.82"
+authors = ["Marcin Milewicz <inspiration075@gmail.com>"]
+description = "Static analyzer for TypeScript NX workspaces (Angular, React, Next.js): dead-code detection, dependency graph, coupling stats and architecture boundary checks"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/marcinmilewicz/nx-analyzer"
+homepage = "https://marcinmilewicz.github.io/nx-analyzer/"
+documentation = "https://marcinmilewicz.github.io/nx-analyzer/"
+keywords = ["nx", "angular", "typescript", "dead-code", "static-analysis"]
+categories = ["development-tools", "command-line-utilities"]
+exclude = ["docs-site/", "docs/", "scripts/", "tests/fixtures/", ".idea/", ".github/"]
 
 [profile.dev]
 debug = true
